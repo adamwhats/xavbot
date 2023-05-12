@@ -1,0 +1,19 @@
+controller_manager:
+  ros__parameters:
+    update_rate: 10  # Hz
+
+    joint_state_broadcaster:
+      type: joint_state_broadcaster/JointStateBroadcaster
+
+    xavbot_controller:
+      type: mecanum_drive_controller/MecanumDriveController
+
+xavbot_controller:
+  ros__parameters:
+    fl_name: "front_left_wheel_joint"
+    fr_name: "front_right_wheel_joint"
+    rl_name: "rear_left_wheel_joint"
+    rr_name: "rear_right_wheel_joint"
+    wheel_radius: 0.016
+    wheelbase_width: 0.09
+    wheelbase_length: 0.095

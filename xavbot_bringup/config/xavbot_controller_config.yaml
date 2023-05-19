@@ -15,5 +15,5 @@ xavbot_controller:
     rl_name: "rear_left_wheel_joint"
     rr_name: "rear_right_wheel_joint"
     wheel_radius: 0.016
-    wheelbase_width: 0.09
-    wheelbase_length: 0.095
+    wheelbase_width: 0.11
+    wheelbase_length: 0.12

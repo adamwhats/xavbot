@@ -63,7 +63,7 @@
       </collision>
 
       <visual>
-        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <origin xyz="0 0 0" rpy="${PI} 0 0"/>
         <geometry>
           <mesh filename="package://xavbot_description/meshes/d435.stl" scale="0.001 0.001 0.001"/>
         </geometry>
@@ -74,7 +74,7 @@
     <joint name="${prefix}camera_joint" type="fixed">
       <parent link="${prefix}chassis_link"/>
       <child link="${prefix}camera_link"/>
-      <origin xyz="0.085 0 0.028" rpy="0 0 0"/>
+      <origin xyz="0.085 0 0.028" rpy="${PI} 0 0"/>
     </joint>
 
     <!-- front left wheel link -->

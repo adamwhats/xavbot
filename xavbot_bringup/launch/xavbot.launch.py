@@ -21,7 +21,7 @@ def generate_launch_description():
         [FindPackageShare("xavbot_bringup"), "config", "xavbot_controller_config.yaml"])
 
     rviz_config_file = PathJoinSubstitution(
-        [FindPackageShare("xavbot_description"), "rviz", "view_xavbot.rviz"])
+        [FindPackageShare("xavbot_bringup"), "rviz", "config.rviz"])
 
     control_node = Node(
         package="controller_manager",

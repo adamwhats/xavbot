@@ -24,7 +24,7 @@ public:
     // Convert input array to an array of floats
     std::array<float, 4> vel_targets_float;
     for (uint i = 0; i < NUM_MOTORS_; i++) {
-      vel_targets_float[i] = static_cast<float>(vel_targets[i]);
+      vel_targets_float[i] = static_cast<float>(vel_targets[i] / (2 * 3.1415927));
     }
 
     // Build a 16 byte string from an array of floats

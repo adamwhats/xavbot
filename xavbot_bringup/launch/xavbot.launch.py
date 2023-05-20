@@ -1,12 +1,16 @@
 from launch import LaunchDescription
-from launch.actions import RegisterEventHandler
-from launch.event_handlers import OnProcessExit
-from launch.substitutions import Command, FindExecutable, PathJoinSubstitution
 from launch_ros.actions import Node
 from launch_ros.substitutions import FindPackageShare
+from launch.actions import RegisterEventHandler, IncludeLaunchDescription
+from launch.conditions import IfCondition
+from launch.event_handlers import OnProcessExit
+from launch.launch_description_sources import PythonLaunchDescriptionSource
+from launch.substitutions import Command, FindExecutable, PathJoinSubstitution, LaunchConfiguration
 
 
 def generate_launch_description():
+    use_rviz = LaunchConfiguration('rviz', default=False)
+
     # Get URDF via xacro
     robot_description_content = Command([
         PathJoinSubstitution([FindExecutable(name="xacro")]),
@@ -29,21 +33,12 @@ def generate_launch_description():
         parameters=[robot_description, robot_controllers],
         output="both",
     )
+
     robot_state_pub_node = Node(
         package="robot_state_publisher",
         executable="robot_state_publisher",
         output="both",
         parameters=[robot_description],
-        # remappings=[
-        #     ("/diff_drive_controller/cmd_vel_unstamped", "/cmd_vel"),
-        # ],
-    )
-    rviz_node = Node(
-        package="rviz2",
-        executable="rviz2",
-        name="rviz2",
-        output="log",
-        arguments=["-d", rviz_config_file],
     )
 
     joint_state_broadcaster_spawner = Node(
@@ -56,6 +51,30 @@ def generate_launch_description():
         package="controller_manager",
         executable="spawner.py",
         arguments=["xavbot_controller", "--controller-manager", "/controller_manager"],
+    )
+
+    realsense_node = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(
+        PathJoinSubstitution([FindPackageShare("realsense2_camera"), "launch", "rs_launch.py"]),
+        ),
+        launch_arguments={
+            'pointcloud.enable': 'true',
+            'clip_distance': '2.5',
+            'spatial_filter.enable': 'true',
+            'temporal_filter.enable': 'true',
+            'decimation_filter.enable': 'true',
+            'hole_filling_filter.enable': 'true',
+            'align_depth.enable': 'true'
+        }.items()
+    )
+
+    rviz_node = Node(
+        package="rviz2",
+        executable="rviz2",
+        name="rviz2",
+        output="log",
+        arguments=["-d", rviz_config_file],
+        condition=IfCondition(use_rviz)
     )
 
     # Delay rviz start after `joint_state_broadcaster`
@@ -77,6 +96,7 @@ def generate_launch_description():
     nodes = [
         control_node,
         robot_state_pub_node,
+        realsense_node,
         joint_state_broadcaster_spawner,
         delay_rviz_after_joint_state_broadcaster_spawner,
         delay_robot_controller_spawner_after_joint_state_broadcaster_spawner,

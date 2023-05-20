@@ -23,6 +23,9 @@ def generate_launch_description():
 
     robot_controllers = PathJoinSubstitution(
         [FindPackageShare("xavbot_bringup"), "config", "xavbot_controller_config.yaml"])
+    
+    localization_config_file = PathJoinSubstitution(
+        [FindPackageShare("xavbot_bringup"), "config", "ekf.yaml"])
 
     rviz_config_file = PathJoinSubstitution(
         [FindPackageShare("xavbot_bringup"), "rviz", "config.rviz"])
@@ -51,6 +54,14 @@ def generate_launch_description():
         package="controller_manager",
         executable="spawner.py",
         arguments=["xavbot_controller", "--controller-manager", "/controller_manager"],
+    )
+
+    localization_node = Node(
+        package='robot_localization',
+        executable='ekf_node',
+        name='ekf_filter_node',
+        output='screen',
+        parameters=[localization_config_file]
     )
 
     realsense_node = IncludeLaunchDescription(
@@ -92,6 +103,7 @@ def generate_launch_description():
     nodes = [
         control_node,
         robot_state_pub_node,
+        localization_node,
         realsense_node,
         joint_state_broadcaster_spawner,
         delay_rviz_after_joint_state_broadcaster_spawner,

@@ -1,5 +1,7 @@
-#include <hardware_interface/types/hardware_interface_type_values.hpp>
-#include <rclcpp/rclcpp.hpp>
+#include "hardware_interface/types/hardware_interface_type_values.hpp"
+#include "rclcpp/rclcpp.hpp"
+#include "tf2/LinearMath/Quaternion.h"
+#include "tf2_geometry_msgs/tf2_geometry_msgs.h"
 
 #include "mecanum_drive_controller.hpp"
 
@@ -9,6 +11,8 @@ namespace mecanum_drive_controller
   MecanumDriveController::MecanumDriveController() : controller_interface::ControllerInterface()
       , velocity_command_subsciption_(nullptr)
       , velocity_command_ptr_(nullptr)
+      , odometry_publisher_(nullptr)
+      , realtime_odometry_publisher_(nullptr)
   {
 
   }
@@ -62,21 +66,69 @@ namespace mecanum_drive_controller
     }
 
     // Calculate the wheel velocities
+    // Kinematics from: https://research.ijcaonline.org/volume113/number3/pxc3901586.pdf
     // const auto twist = (*velocity_command)->twist;
     const auto twist = *velocity_command->get();
-    double half_width = wheelbase_width_ / 2;
-    double half_length = wheelbase_length_ / 2;
-    double fl_wheel_velocity = (1 / wheel_radius_) * (twist.linear.x - twist.linear.y - (half_width + half_length) * twist.angular.z);
-    double fr_wheel_velocity = (1 / wheel_radius_) * (twist.linear.x + twist.linear.y + (half_width + half_length) * twist.angular.z);
-    double rl_wheel_velocity = (1 / wheel_radius_) * (twist.linear.x + twist.linear.y - (half_width + half_length) * twist.angular.z);
-    double rr_wheel_velocity = (1 / wheel_radius_) * (twist.linear.x - twist.linear.y + (half_width + half_length) * twist.angular.z);
+    Eigen::Vector4d target_vels_;
+    Eigen::Vector3d target_kinematics_ {twist.linear.x, twist.linear.y, twist.angular.z};
+    target_vels_ = (1 / wheel_radius_) * T_inv_ * target_kinematics_;
 
     // Set the wheel velocities
     // TODO: Don't hardcode command_interface_ indexes 
-    command_interfaces_[0].set_value(fl_wheel_velocity);
-    command_interfaces_[1].set_value(fr_wheel_velocity);
-    command_interfaces_[2].set_value(rl_wheel_velocity);
-    command_interfaces_[3].set_value(rr_wheel_velocity);
+    command_interfaces_[0].set_value(target_vels_[0]);
+    command_interfaces_[1].set_value(target_vels_[1]);
+    command_interfaces_[2].set_value(target_vels_[2]);
+    command_interfaces_[3].set_value(target_vels_[3]);
+
+    // Read the actual velocities
+    // TODO: Don't hardcode command_interface_ indexes 
+    double fl_wheel_velocity_actual = state_interfaces_[1].get_value();
+    double fr_wheel_velocity_actual = state_interfaces_[3].get_value();
+    double rl_wheel_velocity_actual = state_interfaces_[5].get_value();
+    double rr_wheel_velocity_actual = state_interfaces_[7].get_value();
+
+    // Forward Kinematics
+    Eigen::Vector4d actual_vels_ = {
+      fl_wheel_velocity_actual, 
+      fr_wheel_velocity_actual,
+      rl_wheel_velocity_actual,
+      rr_wheel_velocity_actual
+    };
+    odom_kinematics_ = (wheel_radius_ / 4) * T_fw_ * actual_vels_;
+
+    // Calculate odometry
+    rclcpp::Time current_time_ = node_->get_clock()->now();
+    if (last_time_.seconds() != 0)
+    {
+      const double dt = current_time_.seconds() - last_time_.seconds();
+      last_time_ = current_time_;
+      heading_ += odom_kinematics_[2] * dt;
+      
+      tf2::Quaternion orientation;
+      orientation.setRPY(0.0, 0.0, heading_);
+      odom_pose_.orientation = tf2::toMsg(orientation);
+      odom_pose_.position.x += ((odom_kinematics_[0] * cos(heading_)) + (odom_kinematics_[1] * sin(heading_))) * dt;
+      odom_pose_.position.y += ((odom_kinematics_[0] * sin(heading_)) + (odom_kinematics_[1] * cos(heading_))) * dt;
+
+
+      // Publish odometry
+      if (realtime_odometry_publisher_->trylock())
+      {
+        auto & odometry_message = realtime_odometry_publisher_->msg_;
+        odometry_message.header.stamp = current_time_;
+        odometry_message.header.frame_id = "odom";
+        odometry_message.child_frame_id  = "base_link";
+        odometry_message.pose.pose = odom_pose_;
+        odometry_message.twist.twist.linear.x = odom_kinematics_[0];
+        odometry_message.twist.twist.linear.y = odom_kinematics_[1];
+        odometry_message.twist.twist.angular.z = odom_kinematics_[2];
+        realtime_odometry_publisher_->unlockAndPublish();
+      }
+    }
+    else
+    {
+      last_time_ = current_time_;
+    }
     
     return controller_interface::return_type::OK;
   }
@@ -122,11 +174,25 @@ namespace mecanum_drive_controller
         return CallbackReturn::ERROR;
     }
 
+    // Populate kinematics constants
+    double wheel_offset_ = (wheelbase_width_ + wheelbase_length_) / 2;
+    T_inv_ << 1, -1, -wheel_offset_,
+              1, 1, wheel_offset_,
+              1, 1, -wheel_offset_,
+              1, -1, wheel_offset_;
+    T_fw_ << 1, 1, 1, 1,
+          -1, 1, 1, -1,
+          -1/wheel_offset_, 1/wheel_offset_, -1/wheel_offset_, 1/wheel_offset_;
+
     velocity_command_subsciption_ = get_node()->create_subscription<Twist>("/cmd_vel", 10, [this](const Twist::SharedPtr twist)
       {
         velocity_command_ptr_.writeFromNonRT(twist);
       }
     );
+
+    odometry_publisher_ = get_node()->create_publisher<nav_msgs::msg::Odometry>("/odom", 10);
+    realtime_odometry_publisher_ = std::make_shared<realtime_tools::RealtimePublisher<nav_msgs::msg::Odometry>>(odometry_publisher_);
+
     return CallbackReturn::SUCCESS;
   }
 

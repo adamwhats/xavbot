@@ -60,11 +60,7 @@ def generate_launch_description():
         launch_arguments={
             'pointcloud.enable': 'true',
             'clip_distance': '2.5',
-            'spatial_filter.enable': 'true',
-            'temporal_filter.enable': 'true',
             'decimation_filter.enable': 'true',
-            'hole_filling_filter.enable': 'true',
-            'align_depth.enable': 'true'
         }.items()
     )
 

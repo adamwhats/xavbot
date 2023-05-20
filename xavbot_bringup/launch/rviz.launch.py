@@ -20,15 +20,8 @@ def generate_launch_description():
         condition=IfCondition(use_rviz)
     )
 
-    teleop_node = Node(
-        package='teleop_twist_keyboard',
-        executable='teleop_twist_keyboard',
-        name='teleop_twist_keyboard'
-    )
-
     nodes = [
         rviz_node,
-        teleop_node
     ]
 
     return LaunchDescription(nodes)

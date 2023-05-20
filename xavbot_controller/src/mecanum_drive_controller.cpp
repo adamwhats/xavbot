@@ -43,12 +43,17 @@ namespace mecanum_drive_controller
       return state_interfaces_config;
   }
 
-  controller_interface::CallbackReturn MecanumDriveController::on_init()
+  controller_interface::return_type MecanumDriveController::init(const std::string & controller_name)
   {
-    return controller_interface::CallbackReturn::SUCCESS;
+    auto ret = ControllerInterface::init(controller_name);
+    if (ret != controller_interface::return_type::OK) 
+    {
+      return ret;
+    }
+    return controller_interface::return_type::OK;
   }
 
-  controller_interface::return_type MecanumDriveController::update(const rclcpp::Time & /*time*/, const rclcpp::Duration & /*period*/)
+  controller_interface::return_type MecanumDriveController::update()
   {
     // Get the last velocity command
     auto velocity_command = velocity_command_ptr_.readFromRT();
@@ -76,7 +81,7 @@ namespace mecanum_drive_controller
     return controller_interface::return_type::OK;
   }
 
-  controller_interface::CallbackReturn MecanumDriveController::on_configure(const rclcpp_lifecycle::State &)
+  CallbackReturn MecanumDriveController::on_configure(const rclcpp_lifecycle::State &)
   {
     RCLCPP_INFO(get_node()->get_logger(), "Configure MecanumDriverController");
 
@@ -86,19 +91,19 @@ namespace mecanum_drive_controller
     rr_name_ = get_node()->get_parameter("rr_name").as_string();
     if (fl_name_.empty()) {
         RCLCPP_ERROR(get_node()->get_logger(), "'fl_name' parameter was empty");
-        return controller_interface::CallbackReturn::ERROR;
+        return CallbackReturn::ERROR;
     }
     if (fr_name_.empty()) {
         RCLCPP_ERROR(get_node()->get_logger(), "'fr_name' parameter was empty");
-        return controller_interface::CallbackReturn::ERROR;
+        return CallbackReturn::ERROR;
     }
     if (rl_name_.empty()) {
         RCLCPP_ERROR(get_node()->get_logger(), "'rl_name' parameter was empty");
-        return controller_interface::CallbackReturn::ERROR;
+        return CallbackReturn::ERROR;
     }
     if (rr_name_.empty()) {
         RCLCPP_ERROR(get_node()->get_logger(), "'rr_name' parameter was empty");
-        return controller_interface::CallbackReturn::ERROR;
+        return CallbackReturn::ERROR;
     }
 
     wheel_radius_ = get_node()->get_parameter("wheel_radius").as_double();
@@ -106,15 +111,15 @@ namespace mecanum_drive_controller
     wheelbase_length_ = get_node()->get_parameter("wheelbase_length").as_double();
     if (wheel_radius_ <= 0.0) {
         RCLCPP_ERROR(get_node()->get_logger(), "'wheel_radius' parameter cannot be zero or less");
-        return controller_interface::CallbackReturn::ERROR;
+        return CallbackReturn::ERROR;
     }
     if (wheelbase_width_ <= 0.0) {
         RCLCPP_ERROR(get_node()->get_logger(), "'wheelbase_width' parameter cannot be zero or less");
-        return controller_interface::CallbackReturn::ERROR;
+        return CallbackReturn::ERROR;
     }
     if (wheelbase_length_ <= 0.0) {
         RCLCPP_ERROR(get_node()->get_logger(), "'wheelbase_length' parameter cannot be zero or less");
-        return controller_interface::CallbackReturn::ERROR;
+        return CallbackReturn::ERROR;
     }
 
     velocity_command_subsciption_ = get_node()->create_subscription<Twist>("/cmd_vel", 10, [this](const Twist::SharedPtr twist)
@@ -122,33 +127,33 @@ namespace mecanum_drive_controller
         velocity_command_ptr_.writeFromNonRT(twist);
       }
     );
-    return controller_interface::CallbackReturn::SUCCESS;
+    return CallbackReturn::SUCCESS;
   }
 
-  controller_interface::CallbackReturn MecanumDriveController::on_activate(const rclcpp_lifecycle::State &)
+  CallbackReturn MecanumDriveController::on_activate(const rclcpp_lifecycle::State &)
   {
       
-    return controller_interface::CallbackReturn::SUCCESS;
+    return CallbackReturn::SUCCESS;
   }
 
-  controller_interface::CallbackReturn MecanumDriveController::on_deactivate(const rclcpp_lifecycle::State &)
+  CallbackReturn MecanumDriveController::on_deactivate(const rclcpp_lifecycle::State &)
   {
-    return controller_interface::CallbackReturn::SUCCESS;
+    return CallbackReturn::SUCCESS;
   }
 
-  controller_interface::CallbackReturn MecanumDriveController::on_cleanup(const rclcpp_lifecycle::State &)
+  CallbackReturn MecanumDriveController::on_cleanup(const rclcpp_lifecycle::State &)
   {
-    return controller_interface::CallbackReturn::SUCCESS;
+    return CallbackReturn::SUCCESS;
   }
 
-  controller_interface::CallbackReturn MecanumDriveController::on_error(const rclcpp_lifecycle::State &)
+  CallbackReturn MecanumDriveController::on_error(const rclcpp_lifecycle::State &)
   {
-    return controller_interface::CallbackReturn::SUCCESS;
+    return CallbackReturn::SUCCESS;
   }
 
-  controller_interface::CallbackReturn MecanumDriveController::on_shutdown(const rclcpp_lifecycle::State &)
+  CallbackReturn MecanumDriveController::on_shutdown(const rclcpp_lifecycle::State &)
   {
-    return controller_interface::CallbackReturn::SUCCESS;
+    return CallbackReturn::SUCCESS;
   }
 } // mecanum_drive_controller
 

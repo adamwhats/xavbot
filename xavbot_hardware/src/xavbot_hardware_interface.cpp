@@ -6,15 +6,11 @@
 
 namespace xavbot_hardware_interface
 {
-hardware_interface::CallbackReturn XavBotHardware::on_init(
-  const hardware_interface::HardwareInfo & info)
+hardware_interface::return_type XavBotHardware::configure(const hardware_interface::HardwareInfo & info)
 {
-
-  if (
-    hardware_interface::SystemInterface::on_init(info) !=
-    hardware_interface::CallbackReturn::SUCCESS)
+  if (configure_default(info) != hardware_interface::return_type::OK) 
   {
-    return hardware_interface::CallbackReturn::ERROR;
+    return hardware_interface::return_type::ERROR;
   }
 
   cfg_.fl_name = info_.hardware_parameters["fl_name"];
@@ -37,7 +33,7 @@ hardware_interface::CallbackReturn XavBotHardware::on_init(
         rclcpp::get_logger("XavBotHardware"),
         "Joint '%s' has %zu command interfaces found. 1 expected.", joint.name.c_str(),
         joint.command_interfaces.size());
-      return hardware_interface::CallbackReturn::ERROR;
+      return hardware_interface::return_type::ERROR;
     }
 
     if (joint.command_interfaces[0].name != hardware_interface::HW_IF_VELOCITY)
@@ -46,7 +42,7 @@ hardware_interface::CallbackReturn XavBotHardware::on_init(
         rclcpp::get_logger("XavBotHardware"),
         "Joint '%s' have %s command interfaces found. '%s' expected.", joint.name.c_str(),
         joint.command_interfaces[0].name.c_str(), hardware_interface::HW_IF_VELOCITY);
-      return hardware_interface::CallbackReturn::ERROR;
+      return hardware_interface::return_type::ERROR;
     }
 
     if (joint.state_interfaces.size() != 2)
@@ -55,7 +51,7 @@ hardware_interface::CallbackReturn XavBotHardware::on_init(
         rclcpp::get_logger("XavBotHardware"),
         "Joint '%s' has %zu state interface. 2 expected.", joint.name.c_str(),
         joint.state_interfaces.size());
-      return hardware_interface::CallbackReturn::ERROR;
+      return hardware_interface::return_type::ERROR;
     }
 
     if (joint.state_interfaces[0].name != hardware_interface::HW_IF_POSITION)
@@ -64,7 +60,7 @@ hardware_interface::CallbackReturn XavBotHardware::on_init(
         rclcpp::get_logger("XavBotHardware"),
         "Joint '%s' have '%s' as first state interface. '%s' expected.", joint.name.c_str(),
         joint.state_interfaces[0].name.c_str(), hardware_interface::HW_IF_POSITION);
-      return hardware_interface::CallbackReturn::ERROR;
+      return hardware_interface::return_type::ERROR;
     }
 
     if (joint.state_interfaces[1].name != hardware_interface::HW_IF_VELOCITY)
@@ -73,11 +69,11 @@ hardware_interface::CallbackReturn XavBotHardware::on_init(
         rclcpp::get_logger("XavBotHardware"),
         "Joint '%s' have '%s' as second state interface. '%s' expected.", joint.name.c_str(),
         joint.state_interfaces[1].name.c_str(), hardware_interface::HW_IF_VELOCITY);
-      return hardware_interface::CallbackReturn::ERROR;
+      return hardware_interface::return_type::ERROR;
     }
   }
 
-  return hardware_interface::CallbackReturn::SUCCESS;
+  return hardware_interface::return_type::OK;
 }
 
 std::vector<hardware_interface::StateInterface> XavBotHardware::export_state_interfaces()
@@ -105,34 +101,30 @@ std::vector<hardware_interface::CommandInterface> XavBotHardware::export_command
   return command_interfaces;
 }
 
-hardware_interface::CallbackReturn XavBotHardware::on_activate(
-  const rclcpp_lifecycle::State & /*previous_state*/)
+hardware_interface::return_type XavBotHardware::start()
 {
   RCLCPP_INFO(rclcpp::get_logger("XavBotHardware"), "Activating...");
   motor_controller_.connect(cfg_.device, cfg_.timeout_ms);
-  RCLCPP_INFO(rclcpp::get_logger("XavBotHardware"), "Successfully activated!");
-  return hardware_interface::CallbackReturn::SUCCESS;
+  RCLCPP_INFO(rclcpp::get_logger("XavBotHardware"), "OKfully activated!");
+  return hardware_interface::return_type::OK;
 }
 
-hardware_interface::CallbackReturn XavBotHardware::on_deactivate(
-  const rclcpp_lifecycle::State & /*previous_state*/)
+hardware_interface::return_type XavBotHardware::stop()
 {
   RCLCPP_INFO(rclcpp::get_logger("XavBotHardware"), "Deactivating...");
   motor_controller_.disconnect();
-  RCLCPP_INFO(rclcpp::get_logger("XavBotHardware"), "Successfully deactivated!");
-  return hardware_interface::CallbackReturn::SUCCESS;
+  RCLCPP_INFO(rclcpp::get_logger("XavBotHardware"), "OKfully deactivated!");
+  return hardware_interface::return_type::OK;
 }
 
-hardware_interface::return_type XavBotHardware::read(
-  const rclcpp::Time & /*time*/, const rclcpp::Duration & /*period*/)
+hardware_interface::return_type XavBotHardware::read()
 {
   wheels_.positions = motor_controller_.get_positions();
   wheels_.velocities = motor_controller_.get_velocities();
   return hardware_interface::return_type::OK;
 }
 
-hardware_interface::return_type XavBotHardware::write(
-  const rclcpp::Time & /*time*/, const rclcpp::Duration & /*period*/)
+hardware_interface::return_type XavBotHardware::write()
 {
   motor_controller_.set_velocities(wheels_.cmd);
   return hardware_interface::return_type::OK;

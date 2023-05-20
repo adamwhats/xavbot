@@ -10,6 +10,9 @@
   <buildtool_depend>ament_cmake</buildtool_depend>
 
   <depend>pluginlib</depend>
+  <depend>rclcpp_lifecycle</depend>
+  <depend>rclcpp</depend>
+  <depend>ros2_control</depend>
 
   <test_depend>ament_lint_auto</test_depend>
   <test_depend>ament_lint_common</test_depend>

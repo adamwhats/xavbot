@@ -17,6 +17,8 @@
 
 namespace mecanum_drive_controller
 {
+  using CallbackReturn = rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn;
+
   class MecanumDriveController : public controller_interface::ControllerInterface
   {
     using Twist = geometry_msgs::msg::Twist;
@@ -28,27 +30,26 @@ namespace mecanum_drive_controller
 
     controller_interface::InterfaceConfiguration state_interface_configuration() const override;
 
-    controller_interface::return_type update(
-      const rclcpp::Time & time, const rclcpp::Duration & period) override;
+    controller_interface::return_type update() override;
 
-    controller_interface::CallbackReturn on_init() override;
+    controller_interface::return_type init(const std::string & controller_name) override;
 
-    controller_interface::CallbackReturn on_configure(
+    CallbackReturn on_configure(
       const rclcpp_lifecycle::State & previous_state) override;
 
-    controller_interface::CallbackReturn on_activate(
+    CallbackReturn on_activate(
       const rclcpp_lifecycle::State & previous_state) override;
 
-    controller_interface::CallbackReturn on_deactivate(
+    CallbackReturn on_deactivate(
       const rclcpp_lifecycle::State & previous_state) override;
 
-    controller_interface::CallbackReturn on_cleanup(
+    CallbackReturn on_cleanup(
       const rclcpp_lifecycle::State & previous_state) override;
 
-    controller_interface::CallbackReturn on_error(
+    CallbackReturn on_error(
       const rclcpp_lifecycle::State & previous_state) override;
 
-    controller_interface::CallbackReturn on_shutdown(
+    CallbackReturn on_shutdown(
       const rclcpp_lifecycle::State & previous_state) override;
 
   protected:

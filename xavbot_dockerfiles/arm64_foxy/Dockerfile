@@ -23,5 +23,23 @@ RUN mkdir ./src && cd src \
 COPY . .
 # RUN curl https://raw.githubusercontent.com/IntelRealSense/librealsense/master/config/99-realsense-libusb.rules >> /etc/udev/rules.d/99-realsense-libusb.rules
 
-# X11 apps for testing
-RUN sudo apt-get install -y x11-apps
+# Install xavbot dependencies
+RUN sudo apt-get update && sudo apt-get install -y \
+    libserial-dev \
+    ros-foxy-hardware-interface \
+    ros-foxy-joint-state-broadcaster \
+    ros-foxy-joint-state-broadcaster \
+    ros-foxy-joint-state-publisher-gui \
+    ros-foxy-realsense2-camera \
+    ros-foxy-ros2-control \
+    ros-foxy-rviz2 \
+    ros-foxy-xacro
+
+# Install testing dependencies
+RUN sudo apt-get update && sudo apt-get install -y \
+    x11-apps && \
+pip install \
+    pyserial
+
+# # Setup env
+# RUN echo "export ROS_DOMAIN_ID=0" >> /home/ros/.bashrc

@@ -14,13 +14,7 @@
   <xacro:property name="wheel_radius" value="0.018" />
 
   <!-- Base Link -->
-
   <link name="${prefix}base_link">
-
-  </link>
-
-  <!-- Chassis Link -->
-  <link name="${prefix}chassis_link">
     <collision>
       <origin xyz="0 0 ${base_height/2}" rpy="0 0 0"/>
       <geometry>
@@ -46,10 +40,14 @@
       </inertial>
     </link>
 
+    <!-- Base Footprint -->
+
+    <link name="${prefix}base_footprint"></link>
+
     <joint name="${prefix}chassis_joint" type="fixed">
       <parent link="${prefix}base_link"/>
-      <child link="${prefix}chassis_link"/>
-      <origin xyz="0 0 ${wheel_radius}" rpy="0 0 0"/>
+      <child link="${prefix}base_footprint"/>
+      <origin xyz="0 0 ${-wheel_radius}" rpy="0 0 0"/>
     </joint>
 
     <!-- Camera Link -->
@@ -72,14 +70,14 @@
     </link>
 
     <joint name="${prefix}camera_joint" type="fixed">
-      <parent link="${prefix}chassis_link"/>
+      <parent link="${prefix}base_link"/>
       <child link="${prefix}camera_link"/>
       <origin xyz="0.085 0 0.028" rpy="${PI} 0 0"/>
     </joint>
 
     <!-- front left wheel link -->
     <joint name="${prefix}front_left_wheel_joint" type="continuous">
-      <parent link="${prefix}chassis_link"/>
+      <parent link="${prefix}base_link"/>
       <child link="${prefix}front_left_wheel"/>
       <origin xyz="${base_length/2} ${(base_width + wheel_length)/2} 0" rpy="0 0 0"/>
       <axis xyz="0 1 0"/>
@@ -114,7 +112,7 @@
 
     <!-- front right wheel link -->
     <joint name="${prefix}front_right_wheel_joint" type="continuous">
-      <parent link="${prefix}chassis_link"/>
+      <parent link="${prefix}base_link"/>
       <child link="${prefix}front_right_wheel"/>
       <origin xyz="${base_length/2} -${(base_width + wheel_length)/2} 0" rpy="0 0 0"/>
       <axis xyz="0 1 0"/>
@@ -149,7 +147,7 @@
 
       <!-- rear left wheel link -->
       <joint name="${prefix}rear_left_wheel_joint" type="continuous">
-        <parent link="${prefix}chassis_link"/>
+        <parent link="${prefix}base_link"/>
         <child link="${prefix}rear_left_wheel"/>
         <origin xyz="-${base_length/2} ${(base_width + wheel_length)/2} 0" rpy="0 0 0"/>
         <axis xyz="0 1 0"/>
@@ -184,7 +182,7 @@
 
       <!-- rear right wheel link -->
       <joint name="${prefix}rear_right_wheel_joint" type="continuous">
-        <parent link="${prefix}chassis_link"/>
+        <parent link="${prefix}base_link"/>
         <child link="${prefix}rear_right_wheel"/>
         <origin xyz="-${base_length/2} -${(base_width + wheel_length)/2} 0" rpy="0 0 0"/>
         <axis xyz="0 1 0"/>

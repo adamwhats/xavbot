@@ -107,7 +107,7 @@ namespace mecanum_drive_controller
       tf2::Quaternion orientation;
       orientation.setRPY(0.0, 0.0, heading_);
       odom_pose_.orientation = tf2::toMsg(orientation);
-      odom_pose_.position.x += ((odom_kinematics_[0] * cos(heading_)) + (odom_kinematics_[1] * sin(heading_))) * dt;
+      odom_pose_.position.x += ((odom_kinematics_[0] * cos(heading_)) - (odom_kinematics_[1] * sin(heading_))) * dt;
       odom_pose_.position.y += ((odom_kinematics_[0] * sin(heading_)) + (odom_kinematics_[1] * cos(heading_))) * dt;
 
 
@@ -117,7 +117,7 @@ namespace mecanum_drive_controller
         auto & odometry_message = realtime_odometry_publisher_->msg_;
         odometry_message.header.stamp = current_time_;
         odometry_message.header.frame_id = "odom";
-        odometry_message.child_frame_id  = "base_link";
+        odometry_message.child_frame_id  = "base_footprint";
         odometry_message.pose.pose = odom_pose_;
         odometry_message.twist.twist.linear.x = odom_kinematics_[0];
         odometry_message.twist.twist.linear.y = odom_kinematics_[1];

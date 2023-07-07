@@ -9,11 +9,13 @@
 #include <vector>
 
 #include <controller_interface/controller_interface.hpp>
+#include <eigen3/Eigen/Core>
+#include <geometry_msgs/msg/twist.hpp>
+#include <nav_msgs/msg/odometry.hpp>
 #include <rclcpp_lifecycle/node_interfaces/lifecycle_node_interface.hpp>
 #include <rclcpp_lifecycle/state.hpp>
 #include <realtime_tools/realtime_buffer.h>
-#include <geometry_msgs/msg/twist.hpp>
-#include <string>
+#include <realtime_tools/realtime_publisher.h>
 
 namespace mecanum_drive_controller
 {
@@ -55,6 +57,10 @@ namespace mecanum_drive_controller
   protected:
       rclcpp::Subscription<Twist>::SharedPtr velocity_command_subsciption_;
       realtime_tools::RealtimeBuffer<std::shared_ptr<Twist>> velocity_command_ptr_;
+      
+      std::shared_ptr<rclcpp::Publisher<nav_msgs::msg::Odometry>> odometry_publisher_ = nullptr;
+      std::shared_ptr<realtime_tools::RealtimePublisher<nav_msgs::msg::Odometry>> realtime_odometry_publisher_ = nullptr;
+
       std::string fl_name_;
       std::string fr_name_;
       std::string rl_name_;
@@ -62,6 +68,14 @@ namespace mecanum_drive_controller
       double wheel_radius_;
       double wheelbase_width_;
       double wheelbase_length_;
+
+      Eigen::Matrix<double, 4, 3> T_inv_;
+      Eigen::Matrix<double, 3, 4> T_fw_;
+      Eigen::Vector3d odom_kinematics_;
+      rclcpp::Time last_time_;
+      double heading_ = 0;
+      geometry_msgs::msg::Pose odom_pose_;
+
   };
 }  // namespace mecanum_drive_controller
 #endif  // XAVBOT_CONTROLLER__MECANUM_DRIVE_CONTROLLER_HPP_

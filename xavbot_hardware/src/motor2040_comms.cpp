@@ -50,7 +50,7 @@ void Motor2040Comms::send_and_receive_velocities_(std::string output)
   // Parse the response
   for (uint i = 0; i < NUM_MOTORS_; i++) {
     const float* fptr = reinterpret_cast<const float*>(&input_buffer[i * sizeof(float)]);
-    velocities_measured_[i] = *fptr;
+    velocities_measured_[i] = *fptr * (2 * 3.1415927);
   }
 }
 

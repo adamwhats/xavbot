@@ -30,8 +30,12 @@ RUN sudo apt-get update && sudo apt-get install -y \
     ros-foxy-joint-state-broadcaster \
     ros-foxy-joint-state-broadcaster \
     ros-foxy-joint-state-publisher-gui \
+    ros-foxy-nav2-bringup \
+    ros-foxy-navigation2 \
     ros-foxy-realsense2-camera \
+    ros-foxy-robot-localization \
     ros-foxy-ros2-control \
+    ros-foxy-spatio-temporal-voxel-layer \
     ros-foxy-rviz2 \
     ros-foxy-xacro
 

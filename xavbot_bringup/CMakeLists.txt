@@ -5,7 +5,17 @@ if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   add_compile_options(-Wall -Wextra -Wpedantic)
 endif()
 
-find_package(ament_cmake REQUIRED)
+## DEPENDENCIES
+set(THIS_PACKAGE_INCLUDE_DEPENDS
+  ament_cmake
+  realsense2_camera
+  robot_localization
+)
+
+foreach(Dependency IN ITEMS ${THIS_PACKAGE_INCLUDE_DEPENDS})
+  find_package(${Dependency} REQUIRED)
+endforeach()
+
 
 install(
   DIRECTORY config launch rviz

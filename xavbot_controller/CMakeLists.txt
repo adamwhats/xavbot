@@ -8,8 +8,10 @@ endif()
 ## DEPENDENCIES
 set(THIS_PACKAGE_INCLUDE_DEPENDS
   ament_cmake
+  Eigen3
   geometry_msgs
   hardware_interface
+  nav_msgs
   pluginlib
   rclcpp
   rclcpp_lifecycle

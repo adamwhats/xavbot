@@ -24,6 +24,12 @@ def generate_launch_description():
     robot_controllers = PathJoinSubstitution(
         [FindPackageShare("xavbot_bringup"), "config", "xavbot_controller_config.yaml"])
 
+    localization_config_file = PathJoinSubstitution(
+        [FindPackageShare("xavbot_bringup"), "config", "ekf.yaml"])
+
+    nav2_config_file = PathJoinSubstitution(
+        [FindPackageShare("xavbot_bringup"), "config", "nav2_params.yaml"])
+
     rviz_config_file = PathJoinSubstitution(
         [FindPackageShare("xavbot_bringup"), "rviz", "config.rviz"])
 
@@ -53,9 +59,28 @@ def generate_launch_description():
         arguments=["xavbot_controller", "--controller-manager", "/controller_manager"],
     )
 
+    localization_node = Node(
+        package='robot_localization',
+        executable='ekf_node',
+        name='ekf_filter_node',
+        output='screen',
+        parameters=[localization_config_file]
+    )
+
+    navigation_stack = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(
+            PathJoinSubstitution([FindPackageShare("nav2_bringup"), "launch", "bringup_launch.py"]),
+        ),
+        launch_arguments={
+            "params_file": nav2_config_file,
+            "map": "False",
+            "slam": "True",
+        }.items()
+    )
+
     realsense_node = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
-        PathJoinSubstitution([FindPackageShare("realsense2_camera"), "launch", "rs_launch.py"]),
+            PathJoinSubstitution([FindPackageShare("realsense2_camera"), "launch", "rs_launch.py"]),
         ),
         launch_arguments={
             'pointcloud.enable': 'true',
@@ -92,6 +117,8 @@ def generate_launch_description():
     nodes = [
         control_node,
         robot_state_pub_node,
+        localization_node,
+        navigation_stack,
         realsense_node,
         joint_state_broadcaster_spawner,
         delay_rviz_after_joint_state_broadcaster_spawner,

@@ -19,16 +19,16 @@ def generate_launch_description():
             [FindPackageShare("xavbot_description"), "urdf", "xavbot.urdf.xacro"]),
     ]
     )
-    robot_description = {"robot_description": robot_description_content}
+    robot_description = {'robot_description': robot_description_content}
 
     robot_controllers = PathJoinSubstitution(
         [FindPackageShare("xavbot_bringup"), "config", "xavbot_controller_config.yaml"])
 
-    localization_config_file = PathJoinSubstitution(
-        [FindPackageShare("xavbot_bringup"), "config", "ekf.yaml"])
+    # localization_config_file = PathJoinSubstitution(
+    #     [FindPackageShare("xavbot_bringup"), "config", "ekf.yaml"])
 
-    nav2_config_file = PathJoinSubstitution(
-        [FindPackageShare("xavbot_bringup"), "config", "nav2_params.yaml"])
+    # nav2_config_file = PathJoinSubstitution(
+    #     [FindPackageShare("xavbot_bringup"), "config", "nav2_params.yaml"])
 
     rviz_config_file = PathJoinSubstitution(
         [FindPackageShare("xavbot_bringup"), "rviz", "config.rviz"])
@@ -41,9 +41,9 @@ def generate_launch_description():
     )
 
     robot_state_pub_node = Node(
-        package="robot_state_publisher",
-        executable="robot_state_publisher",
-        output="both",
+        package='robot_state_publisher',
+        executable='robot_state_publisher',
+        output='screen',
         parameters=[robot_description],
     )
 
@@ -59,24 +59,24 @@ def generate_launch_description():
         arguments=["xavbot_controller", "--controller-manager", "/controller_manager"],
     )
 
-    localization_node = Node(
-        package='robot_localization',
-        executable='ekf_node',
-        name='ekf_filter_node',
-        output='screen',
-        parameters=[localization_config_file]
-    )
+    # localization_node = Node(
+    #     package='robot_localization',
+    #     executable='ekf_node',
+    #     name='ekf_filter_node',
+    #     output='screen',
+    #     parameters=[localization_config_file]
+    # )
 
-    navigation_stack = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource(
-            PathJoinSubstitution([FindPackageShare("nav2_bringup"), "launch", "bringup_launch.py"]),
-        ),
-        launch_arguments={
-            "params_file": nav2_config_file,
-            "map": "False",
-            "slam": "True",
-        }.items()
-    )
+    # navigation_stack = IncludeLaunchDescription(
+    #     PythonLaunchDescriptionSource(
+    #         PathJoinSubstitution([FindPackageShare("nav2_bringup"), "launch", "bringup_launch.py"]),
+    #     ),
+    #     launch_arguments={
+    #         "params_file": nav2_config_file,
+    #         "map": "False",
+    #         "slam": "True",
+    #     }.items()
+    # )
 
     realsense_node = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
@@ -117,10 +117,10 @@ def generate_launch_description():
     nodes = [
         control_node,
         robot_state_pub_node,
-        localization_node,
-        navigation_stack,
-        realsense_node,
         joint_state_broadcaster_spawner,
+        # localization_node,
+        # navigation_stack,
+        realsense_node,
         delay_rviz_after_joint_state_broadcaster_spawner,
         delay_robot_controller_spawner_after_joint_state_broadcaster_spawner,
     ]

@@ -8,12 +8,10 @@
   <!-- Import Rviz colors -->
   <xacro:include filename="$(find xavbot_description)/urdf/xavbot.materials.xacro" />
 
-  <!-- Import diffbot ros2_control description -->
+  <!-- Import xavbot ros2_control description -->
   <xacro:include filename="$(find xavbot_description)/urdf/xavbot.ros2_control.xacro" />
 
   <xacro:xavbot prefix="$(arg prefix)" />
-
-  <xacro:xavbot_ros2_control
-    name="xavbot" prefix="$(arg prefix)" />
+  <xacro:xavbot_ros2_control name="xavbot" prefix="$(arg prefix)" />
 
 </robot>

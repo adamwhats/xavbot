@@ -11,6 +11,7 @@
 #include <controller_interface/controller_interface.hpp>
 #include <eigen3/Eigen/Core>
 #include <geometry_msgs/msg/twist.hpp>
+#include <geometry_msgs/msg/point_stamped.hpp>
 #include <nav_msgs/msg/odometry.hpp>
 #include <rclcpp_lifecycle/node_interfaces/lifecycle_node_interface.hpp>
 #include <rclcpp_lifecycle/state.hpp>
@@ -58,8 +59,8 @@ namespace mecanum_drive_controller
       rclcpp::Subscription<Twist>::SharedPtr velocity_command_subsciption_;
       realtime_tools::RealtimeBuffer<std::shared_ptr<Twist>> velocity_command_ptr_;
       
-      std::shared_ptr<rclcpp::Publisher<nav_msgs::msg::Odometry>> odometry_publisher_ = nullptr;
-      std::shared_ptr<realtime_tools::RealtimePublisher<nav_msgs::msg::Odometry>> realtime_odometry_publisher_ = nullptr;
+      std::shared_ptr<rclcpp::Publisher<nav_msgs::msg::Odometry>> odometry_publisher_;
+      std::shared_ptr<realtime_tools::RealtimePublisher<nav_msgs::msg::Odometry>> realtime_odometry_publisher_;
 
       std::string fl_name_;
       std::string fr_name_;

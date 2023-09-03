@@ -3,19 +3,12 @@
 #include "tf2/LinearMath/Quaternion.h"
 #include "tf2_geometry_msgs/tf2_geometry_msgs.h"
 
-#include "mecanum_drive_controller.hpp"
+#include "xavbot_controller/mecanum_drive_controller.hpp"
 
 namespace mecanum_drive_controller
 {
 
-  MecanumDriveController::MecanumDriveController() : controller_interface::ControllerInterface()
-      , velocity_command_subsciption_(nullptr)
-      , velocity_command_ptr_(nullptr)
-      , odometry_publisher_(nullptr)
-      , realtime_odometry_publisher_(nullptr)
-  {
-
-  }
+  MecanumDriveController::MecanumDriveController() : controller_interface::ControllerInterface() {}
 
   controller_interface::InterfaceConfiguration MecanumDriveController::command_interface_configuration() const
   {
@@ -135,8 +128,19 @@ namespace mecanum_drive_controller
 
   CallbackReturn MecanumDriveController::on_configure(const rclcpp_lifecycle::State &)
   {
-    RCLCPP_INFO(get_node()->get_logger(), "Configure MecanumDriverController");
+    RCLCPP_INFO(get_node()->get_logger(), "Configure MecanumDriverController"); 
 
+    // Create subsciptions and publishers
+    velocity_command_subsciption_ = get_node()->create_subscription<Twist>("/cmd_vel", 10, [this](const Twist::SharedPtr twist)
+      {
+        velocity_command_ptr_.writeFromNonRT(twist);
+      }
+    );
+
+    // odometry_publisher_ = get_node()->create_publisher<nav_msgs::msg::Odometry>("/odom", rclcpp::SystemDefaultsQoS());
+    // realtime_odometry_publisher_ = std::make_shared<realtime_tools::RealtimePublisher<nav_msgs::msg::Odometry>>(odometry_publisher_); 
+
+    // COnfigure controller from parameters
     fl_name_ = get_node()->get_parameter("fl_name").as_string();
     fr_name_ = get_node()->get_parameter("fr_name").as_string();
     rl_name_ = get_node()->get_parameter("rl_name").as_string();
@@ -183,15 +187,6 @@ namespace mecanum_drive_controller
     T_fw_ << 1, 1, 1, 1,
           -1, 1, 1, -1,
           -1/wheel_offset_, 1/wheel_offset_, -1/wheel_offset_, 1/wheel_offset_;
-
-    velocity_command_subsciption_ = get_node()->create_subscription<Twist>("/cmd_vel", 10, [this](const Twist::SharedPtr twist)
-      {
-        velocity_command_ptr_.writeFromNonRT(twist);
-      }
-    );
-
-    // odometry_publisher_ = get_node()->create_publisher<nav_msgs::msg::Odometry>("/odom", 10);
-    // realtime_odometry_publisher_ = std::make_shared<realtime_tools::RealtimePublisher<nav_msgs::msg::Odometry>>(odometry_publisher_);
 
     return CallbackReturn::SUCCESS;
   }

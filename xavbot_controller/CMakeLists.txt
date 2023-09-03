@@ -32,7 +32,7 @@ add_library(
 target_include_directories(
     xavbot_controller
     PRIVATE
-    "include/xavbot_controller"
+    "include"
 )
 
 target_link_libraries(xavbot_controller PUBLIC serial)

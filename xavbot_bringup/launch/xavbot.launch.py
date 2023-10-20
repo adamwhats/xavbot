@@ -9,7 +9,7 @@ from launch.substitutions import Command, FindExecutable, PathJoinSubstitution, 
 
 
 def generate_launch_description():
-    use_rviz = LaunchConfiguration('rviz', default=False)
+    # use_rviz = LaunchConfiguration('rviz', default=False)
 
     # Get URDF via xacro
     robot_description_content = Command([
@@ -23,6 +23,7 @@ def generate_launch_description():
 
     robot_controllers = PathJoinSubstitution(
         [FindPackageShare("xavbot_bringup"), "config", "xavbot_controller_config.yaml"])
+    
 
     # localization_config_file = PathJoinSubstitution(
     #     [FindPackageShare("xavbot_bringup"), "config", "ekf.yaml"])
@@ -30,8 +31,8 @@ def generate_launch_description():
     # nav2_config_file = PathJoinSubstitution(
     #     [FindPackageShare("xavbot_bringup"), "config", "nav2_params.yaml"])
 
-    rviz_config_file = PathJoinSubstitution(
-        [FindPackageShare("xavbot_bringup"), "rviz", "config.rviz"])
+    # rviz_config_file = PathJoinSubstitution(
+    #     [FindPackageShare("xavbot_bringup"), "rviz", "config.rviz"])
 
     control_node = Node(
         package="controller_manager",
@@ -78,33 +79,22 @@ def generate_launch_description():
     #     }.items()
     # )
 
-    realsense_node = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource(
-            PathJoinSubstitution([FindPackageShare("realsense2_camera"), "launch", "rs_launch.py"]),
-        ),
-        launch_arguments={
-            'pointcloud.enable': 'true',
-            'clip_distance': '2.5',
-            'decimation_filter.enable': 'true',
-        }.items()
-    )
+    # rviz_node = Node(
+    #     package="rviz2",
+    #     executable="rviz2",
+    #     name="rviz2",
+    #     output="log",
+    #     arguments=["-d", rviz_config_file],
+    #     condition=IfCondition(use_rviz)
+    # )
 
-    rviz_node = Node(
-        package="rviz2",
-        executable="rviz2",
-        name="rviz2",
-        output="log",
-        arguments=["-d", rviz_config_file],
-        condition=IfCondition(use_rviz)
-    )
-
-    # Delay rviz start after `joint_state_broadcaster`
-    delay_rviz_after_joint_state_broadcaster_spawner = RegisterEventHandler(
-        event_handler=OnProcessExit(
-            target_action=joint_state_broadcaster_spawner,
-            on_exit=[rviz_node],
-        )
-    )
+    # # Delay rviz start after `joint_state_broadcaster`
+    # delay_rviz_after_joint_state_broadcaster_spawner = RegisterEventHandler(
+    #     event_handler=OnProcessExit(
+    #         target_action=joint_state_broadcaster_spawner,
+    #         on_exit=[rviz_node],
+    #     )
+    # )
 
     # Delay start of robot_controller after `joint_state_broadcaster`
     delay_robot_controller_spawner_after_joint_state_broadcaster_spawner = RegisterEventHandler(
@@ -118,11 +108,11 @@ def generate_launch_description():
         control_node,
         robot_state_pub_node,
         joint_state_broadcaster_spawner,
+        delay_robot_controller_spawner_after_joint_state_broadcaster_spawner,
+        
         # localization_node,
         # navigation_stack,
-        realsense_node,
-        delay_rviz_after_joint_state_broadcaster_spawner,
-        delay_robot_controller_spawner_after_joint_state_broadcaster_spawner,
+        # delay_rviz_after_joint_state_broadcaster_spawner,        
     ]
 
     return LaunchDescription(nodes)

@@ -5,33 +5,34 @@
 
   <!-- Constants for robot dimensions -->
   <xacro:property name="PI" value="3.1415926535897931"/>
-  <xacro:property name="base_mass" value="0.08" /> <!-- arbitrary value for base mass -->
+  <xacro:property name="base_mass" value="1.0" /> <!-- arbitrary value for base mass -->
   <xacro:property name="base_width" value="0.11" />
   <xacro:property name="base_length" value="0.12" />
   <xacro:property name="base_height" value="0.05" />
   <xacro:property name="wheel_mass" value="0.02" /> <!-- arbitrary value for wheel mass -->
   <xacro:property name="wheel_length" value="0.024" />
   <xacro:property name="wheel_radius" value="0.018" />
+  <xacro:property name="profile_size" value="0.02" />
 
   <!-- Base Link -->
   <link name="${prefix}base_link">
     <collision>
-      <origin xyz="0 0 ${base_height/2}" rpy="0 0 0"/>
+      <origin xyz="0.125 0.125 ${wheel_radius + 0.04}" rpy="0 0 0"/>
       <geometry>
-        <box size="${base_length + 0.05} ${base_width} ${base_height}"/>
+        <box size="0.25 0.25 0.08"/>
       </geometry>
     </collision>
 
     <visual>
-      <origin xyz="0 0 0" rpy="0 0 ${PI}"/>
+      <origin xyz="0 0 ${wheel_radius}" rpy="0 0 0"/>
       <geometry>
-        <mesh filename="package://xavbot_description/meshes/xavbot_chassis.stl" scale="0.001 0.001 0.001"/>
+        <mesh filename="package://xavbot_description/meshes/visual/chassis.stl" scale="0.001 0.001 0.001"/>
       </geometry>
-      <material name="black"/>
+      <material name="grey"/>
     </visual>
 
     <inertial>
-      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <origin xyz="0 0 ${wheel_radius + 0.04}" rpy="0 0 0"/>
       <mass value="${base_mass}"/>
       <inertia
         ixx="${base_mass / 12.0 * (base_length*base_length + base_height*base_height)}" ixy="0.0" ixz="0.0"
@@ -40,68 +41,33 @@
       </inertial>
     </link>
 
-    <!-- Base Footprint -->
-
-    <link name="${prefix}base_footprint"></link>
-
-    <joint name="${prefix}chassis_joint" type="fixed">
-      <parent link="${prefix}base_link"/>
-      <child link="${prefix}base_footprint"/>
-      <origin xyz="0 0 ${-wheel_radius}" rpy="0 0 0"/>
-    </joint>
-
-    <!-- Camera Link -->
-
-    <link name="${prefix}camera_link">
-      <collision>
-        <origin xyz="0 0 0.0125" rpy="0 0 0"/>
-        <geometry>
-          <box size="0.025 0.09 0.025"/>
-        </geometry>
-      </collision>
-
-      <visual>
-        <origin xyz="0 0 0" rpy="0 0 ${PI}"/>
-        <geometry>
-          <mesh filename="package://xavbot_description/meshes/d435.stl" scale="0.001 0.001 0.001"/>
-        </geometry>
-        <material name="silver"/>
-      </visual>
-    </link>
-
-    <joint name="${prefix}camera_joint" type="fixed">
-      <parent link="${prefix}base_link"/>
-      <child link="${prefix}camera_link"/>
-      <origin xyz="0.085 0 0.028" rpy="0 0 0"/>
-    </joint>
-
     <!-- front left wheel link -->
     <joint name="${prefix}front_left_wheel_joint" type="continuous">
       <parent link="${prefix}base_link"/>
       <child link="${prefix}front_left_wheel"/>
-      <origin xyz="${base_length/2} ${(base_width + wheel_length)/2} 0" rpy="0 0 0"/>
-      <axis xyz="0 1 0"/>
+      <origin xyz="0.219 0.250 ${wheel_radius}" rpy="0 0 ${PI/2}"/>
+      <axis xyz="1 0 0"/>
       <dynamics damping="0.2"/>
     </joint>
 
     <link name="${prefix}front_left_wheel">
       <collision>
-        <origin xyz="0 0 0" rpy="${PI/2} 0 0"/>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
         <geometry>
-          <cylinder length="${wheel_length}" radius="${wheel_radius}"/>
+          <mesh filename="package://xavbot_description/meshes/collision/dummy_wheel.stl" scale="0.001 0.001 0.001"/>
         </geometry>
       </collision>
 
       <visual>
-        <origin xyz="0 0 0" rpy="${PI/2} 0 0"/>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
         <geometry>
-          <cylinder length="${wheel_length}" radius="${wheel_radius}"/>
+          <mesh filename="package://xavbot_description/meshes/visual/dummy_wheel.stl" scale="0.001 0.001 0.001"/>
         </geometry>
         <material name="green"/>
       </visual>
 
       <inertial>
-        <origin xyz="0 0 0" rpy="${PI/2} 0 0"/>
+        <origin xyz="0 0 0" rpy="${wheel_length / 2} 0 0"/>
         <mass value="${wheel_mass}"/>
         <inertia
           ixx="${wheel_mass / 12.0 * (3*wheel_radius + wheel_length*wheel_length)}" ixy="0.0" ixz="0.0"
@@ -114,29 +80,29 @@
     <joint name="${prefix}front_right_wheel_joint" type="continuous">
       <parent link="${prefix}base_link"/>
       <child link="${prefix}front_right_wheel"/>
-      <origin xyz="${base_length/2} -${(base_width + wheel_length)/2} 0" rpy="0 0 0"/>
-      <axis xyz="0 1 0"/>
+      <origin xyz="0.219 0 ${wheel_radius}" rpy="0 0 -${PI/2}"/>
+      <axis xyz="1 0 0"/>
       <dynamics damping="0.2"/>
     </joint>
 
     <link name="${prefix}front_right_wheel">
       <collision>
-        <origin xyz="0 0 0" rpy="${PI/2} 0 0"/>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
         <geometry>
-          <cylinder length="${wheel_length}" radius="${wheel_radius}"/>
+          <mesh filename="package://xavbot_description/meshes/collision/dummy_wheel.stl" scale="0.001 0.001 0.001"/>
         </geometry>
       </collision>
 
       <visual>
-        <origin xyz="0 0 0" rpy="${PI/2} 0 0"/>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
         <geometry>
-          <cylinder length="${wheel_length}" radius="${wheel_radius}"/>
+          <mesh filename="package://xavbot_description/meshes/visual/dummy_wheel.stl" scale="0.001 0.001 0.001"/>
         </geometry>
         <material name="green"/>
       </visual>
 
       <inertial>
-        <origin xyz="0 0 0" rpy="${PI/2} 0 0"/>
+        <origin xyz="0 0 0" rpy="${wheel_length / 2} 0 0"/>
         <mass value="${wheel_mass}"/>
         <inertia
           ixx="${wheel_mass / 12.0 * (3*wheel_radius + wheel_length*wheel_length)}" ixy="0.0" ixz="0.0"
@@ -149,29 +115,29 @@
       <joint name="${prefix}rear_left_wheel_joint" type="continuous">
         <parent link="${prefix}base_link"/>
         <child link="${prefix}rear_left_wheel"/>
-        <origin xyz="-${base_length/2} ${(base_width + wheel_length)/2} 0" rpy="0 0 0"/>
-        <axis xyz="0 1 0"/>
+        <origin xyz="0.031 0.250 ${wheel_radius}" rpy="0 0 ${PI/2}"/>
+        <axis xyz="1 0 0"/>
         <dynamics damping="0.2"/>
       </joint>
 
       <link name="${prefix}rear_left_wheel">
         <collision>
-          <origin xyz="0 0 0" rpy="${PI/2} 0 0"/>
+          <origin xyz="0 0 0" rpy="0 0 0"/>
           <geometry>
-            <cylinder length="${wheel_length}" radius="${wheel_radius}"/>
+            <mesh filename="package://xavbot_description/meshes/collision/dummy_wheel.stl" scale="0.001 0.001 0.001"/>
           </geometry>
         </collision>
 
         <visual>
-          <origin xyz="0 0 0" rpy="${PI/2} 0 0"/>
+          <origin xyz="0 0 0" rpy="0 0 0"/>
           <geometry>
-            <cylinder length="${wheel_length}" radius="${wheel_radius}"/>
+            <mesh filename="package://xavbot_description/meshes/visual/dummy_wheel.stl" scale="0.001 0.001 0.001"/>
           </geometry>
           <material name="green"/>
         </visual>
 
         <inertial>
-          <origin xyz="0 0 0" rpy="${PI/2} 0 0"/>
+          <origin xyz="0 0 0" rpy="${wheel_length / 2} 0 0"/>
           <mass value="${wheel_mass}"/>
           <inertia
             ixx="${wheel_mass / 12.0 * (3*wheel_radius + wheel_length*wheel_length)}" ixy="0.0" ixz="0.0"
@@ -184,29 +150,29 @@
       <joint name="${prefix}rear_right_wheel_joint" type="continuous">
         <parent link="${prefix}base_link"/>
         <child link="${prefix}rear_right_wheel"/>
-        <origin xyz="-${base_length/2} -${(base_width + wheel_length)/2} 0" rpy="0 0 0"/>
-        <axis xyz="0 1 0"/>
+        <origin xyz="0.031 0 ${wheel_radius}" rpy="0 0 -${PI/2}"/>
+        <axis xyz="1 0 0"/>
         <dynamics damping="0.2"/>
       </joint>
 
       <link name="${prefix}rear_right_wheel">
         <collision>
-          <origin xyz="0 0 0" rpy="${PI/2} 0 0"/>
+          <origin xyz="0 0 0" rpy="0 0 0"/>
           <geometry>
-            <cylinder length="${wheel_length}" radius="${wheel_radius}"/>
+            <mesh filename="package://xavbot_description/meshes/collision/dummy_wheel.stl" scale="0.001 0.001 0.001"/>
           </geometry>
         </collision>
 
         <visual>
-          <origin xyz="0 0 0" rpy="${PI/2} 0 0"/>
+          <origin xyz="0 0 0" rpy="0 0 0"/>
           <geometry>
-            <cylinder length="${wheel_length}" radius="${wheel_radius}"/>
+            <mesh filename="package://xavbot_description/meshes/visual/dummy_wheel.stl" scale="0.001 0.001 0.001"/>
           </geometry>
           <material name="green"/>
         </visual>
 
         <inertial>
-          <origin xyz="0 0 0" rpy="${PI/2} 0 0"/>
+          <origin xyz="0 0 0" rpy="${wheel_length / 2} 0 0"/>
           <mass value="${wheel_mass}"/>
           <inertia
             ixx="${wheel_mass / 12.0 * (3*wheel_radius + wheel_length*wheel_length)}" ixy="0.0" ixz="0.0"
@@ -214,6 +180,74 @@
             izz="${wheel_mass / 12.0 * wheel_radius*wheel_radius}"/>
           </inertial>
         </link>
+
+      <!-- link0 -->
+      <joint name="${prefix}link0_joint" type="revolute">
+        <parent link="${prefix}base_link"/>
+        <child link="${prefix}link0"/>
+        <origin xyz="0.140 0.185 ${wheel_radius + profile_size}" rpy="0 0 0"/>
+        <axis xyz="0 1 0"/>
+        <dynamics damping="0.2"/>
+        <limit
+          lower="-${PI/2}"
+          upper="${PI/2}"
+          effort="4"
+          velocity="4.5">
+        </limit>
+      </joint>
+
+      <link name="${prefix}link0"/>
+
+      <!-- link1 -->
+      <joint name="${prefix}link1_joint" type="revolute">
+        <parent link="${prefix}link0"/>
+        <child link="${prefix}link1"/>
+        <origin xyz="0 0 0.1" rpy="0 0 0"/>
+        <axis xyz="0 1 0"/>
+        <dynamics damping="0.2"/>
+        <limit
+          lower="-${5 * PI/4}"
+          upper="${PI/4}"
+          effort="4"
+          velocity="4.5">
+        </limit>
+      </joint>
+
+      <link name="${prefix}link1"/>
+
+      <!-- link2 -->
+      <joint name="${prefix}link2_joint" type="revolute">
+        <parent link="${prefix}link1"/>
+        <child link="${prefix}link2"/>
+        <origin xyz="0.1 0 0" rpy="0 ${PI/2} 0"/>
+        <axis xyz="0 1 0"/>
+        <dynamics damping="0.2"/>
+        <limit
+          lower="-${5 * PI/4}"
+          upper="${PI/4}"
+          effort="4"
+          velocity="4.5">
+        </limit>
+      </joint>
+
+      <link name="${prefix}link2"/>
+
+      <!-- link3 -->
+      <joint name="${prefix}link3_joint" type="fixed">
+        <parent link="${prefix}link2"/>
+        <child link="${prefix}link3"/>
+        <origin xyz="0.04 0 0" rpy="0 ${PI/2} 0"/>
+        <axis xyz="0 0 1"/>
+        <dynamics damping="0.2"/>
+        <limit
+          lower="-${3 * PI/4}"
+          upper="${3 * PI/4}"
+          effort="4"
+          velocity="4.5">
+        </limit>
+      </joint>
+
+      <link name="${prefix}link3"/>
 
   </xacro:macro>
 

@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="xavbot">
 
-  <xacro:macro name="xavbot" params="prefix">
+  <xacro:macro name="xavbot" params="prefix='' mesh_dir='package://xavbot_description/meshes'">
 
   <!-- Constants for robot dimensions -->
   <xacro:property name="PI" value="3.1415926535897931"/>
@@ -26,7 +26,7 @@
     <visual>
       <origin xyz="0 0 ${wheel_radius}" rpy="0 0 0"/>
       <geometry>
-        <mesh filename="package://xavbot_description/meshes/visual/chassis.stl" scale="0.001 0.001 0.001"/>
+        <mesh filename="${mesh_dir}/visual/chassis.stl" scale="0.001 0.001 0.001"/>
       </geometry>
       <material name="grey"/>
     </visual>
@@ -54,14 +54,14 @@
       <collision>
         <origin xyz="0 0 0" rpy="0 0 0"/>
         <geometry>
-          <mesh filename="package://xavbot_description/meshes/collision/dummy_wheel.stl" scale="0.001 0.001 0.001"/>
+          <mesh filename="${mesh_dir}/collision/dummy_wheel.stl" scale="0.001 0.001 0.001"/>
         </geometry>
       </collision>
 
       <visual>
         <origin xyz="0 0 0" rpy="0 0 0"/>
         <geometry>
-          <mesh filename="package://xavbot_description/meshes/visual/dummy_wheel.stl" scale="0.001 0.001 0.001"/>
+          <mesh filename="${mesh_dir}/visual/dummy_wheel.stl" scale="0.001 0.001 0.001"/>
         </geometry>
         <material name="green"/>
       </visual>
@@ -89,14 +89,14 @@
       <collision>
         <origin xyz="0 0 0" rpy="0 0 0"/>
         <geometry>
-          <mesh filename="package://xavbot_description/meshes/collision/dummy_wheel.stl" scale="0.001 0.001 0.001"/>
+          <mesh filename="${mesh_dir}/collision/dummy_wheel.stl" scale="0.001 0.001 0.001"/>
         </geometry>
       </collision>
 
       <visual>
         <origin xyz="0 0 0" rpy="0 0 0"/>
         <geometry>
-          <mesh filename="package://xavbot_description/meshes/visual/dummy_wheel.stl" scale="0.001 0.001 0.001"/>
+          <mesh filename="${mesh_dir}/visual/dummy_wheel.stl" scale="0.001 0.001 0.001"/>
         </geometry>
         <material name="green"/>
       </visual>
@@ -124,14 +124,14 @@
         <collision>
           <origin xyz="0 0 0" rpy="0 0 0"/>
           <geometry>
-            <mesh filename="package://xavbot_description/meshes/collision/dummy_wheel.stl" scale="0.001 0.001 0.001"/>
+            <mesh filename="${mesh_dir}/collision/dummy_wheel.stl" scale="0.001 0.001 0.001"/>
           </geometry>
         </collision>
 
         <visual>
           <origin xyz="0 0 0" rpy="0 0 0"/>
           <geometry>
-            <mesh filename="package://xavbot_description/meshes/visual/dummy_wheel.stl" scale="0.001 0.001 0.001"/>
+            <mesh filename="${mesh_dir}/visual/dummy_wheel.stl" scale="0.001 0.001 0.001"/>
           </geometry>
           <material name="green"/>
         </visual>
@@ -159,14 +159,14 @@
         <collision>
           <origin xyz="0 0 0" rpy="0 0 0"/>
           <geometry>
-            <mesh filename="package://xavbot_description/meshes/collision/dummy_wheel.stl" scale="0.001 0.001 0.001"/>
+            <mesh filename="${mesh_dir}/collision/dummy_wheel.stl" scale="0.001 0.001 0.001"/>
           </geometry>
         </collision>
 
         <visual>
           <origin xyz="0 0 0" rpy="0 0 0"/>
           <geometry>
-            <mesh filename="package://xavbot_description/meshes/visual/dummy_wheel.stl" scale="0.001 0.001 0.001"/>
+            <mesh filename="${mesh_dir}/visual/dummy_wheel.stl" scale="0.001 0.001 0.001"/>
           </geometry>
           <material name="green"/>
         </visual>
@@ -196,13 +196,28 @@
         </limit>
       </joint>
 
-      <link name="${prefix}link0"/>
+      <link name="${prefix}link0">
+        <collision>
+          <origin xyz="0 0 0.05" rpy="0 0 0"/>
+          <geometry>
+            <box size="0.02 0.02 0.1"/>
+          </geometry>
+        </collision>
+
+        <visual>
+          <origin xyz="0 0 0.05" rpy="0 0 0"/>
+          <geometry>
+            <box size="0.02 0.02 0.1"/>
+          </geometry>
+          <material name="grey"/>
+        </visual>
+      </link>
 
       <!-- link1 -->
       <joint name="${prefix}link1_joint" type="revolute">
         <parent link="${prefix}link0"/>
         <child link="${prefix}link1"/>
-        <origin xyz="0 0 0.1" rpy="0 0 0"/>
+        <origin xyz="0 0 0.1" rpy="0 ${PI/2} 0"/>
         <axis xyz="0 1 0"/>
         <dynamics damping="0.2"/>
         <limit
@@ -213,13 +228,28 @@
         </limit>
       </joint>
 
-      <link name="${prefix}link1"/>
+      <link name="${prefix}link1">
+        <collision>
+          <origin xyz="0 0 0.05" rpy="0 0 0"/>
+          <geometry>
+            <box size="0.02 0.02 0.1"/>
+          </geometry>
+        </collision>
+
+        <visual>
+          <origin xyz="0 0 0.05" rpy="0 0 0"/>
+          <geometry>
+            <box size="0.02 0.02 0.1"/>
+          </geometry>
+          <material name="grey"/>
+        </visual>
+      </link>
 
       <!-- link2 -->
       <joint name="${prefix}link2_joint" type="revolute">
         <parent link="${prefix}link1"/>
         <child link="${prefix}link2"/>
-        <origin xyz="0.1 0 0" rpy="0 ${PI/2} 0"/>
+        <origin xyz="0 0 0.1" rpy="0 ${PI/2} 0"/>
         <axis xyz="0 1 0"/>
         <dynamics damping="0.2"/>
         <limit
@@ -230,13 +260,28 @@
         </limit>
       </joint>
 
-      <link name="${prefix}link2"/>
+      <link name="${prefix}link2">
+        <collision>
+          <origin xyz="0 0 0.015" rpy="0 0 0"/>
+          <geometry>
+            <box size="0.02 0.02 0.03"/>
+          </geometry>
+        </collision>
+
+        <visual>
+          <origin xyz="0 0 0.015" rpy="0 0 0"/>
+          <geometry>
+            <box size="0.02 0.02 0.03"/>
+          </geometry>
+          <material name="grey"/>
+        </visual>
+      </link>
 
       <!-- link3 -->
       <joint name="${prefix}link3_joint" type="fixed">
         <parent link="${prefix}link2"/>
         <child link="${prefix}link3"/>
-        <origin xyz="0.04 0 0" rpy="0 ${PI/2} 0"/>
+        <origin xyz="0 0 0.03" rpy="0 0 0"/>
         <axis xyz="0 0 1"/>
         <dynamics damping="0.2"/>
         <limit

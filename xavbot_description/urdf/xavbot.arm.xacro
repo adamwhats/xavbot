@@ -1,0 +1,181 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="xavbot">
+
+  <xacro:macro name="xavbot_arm" params="prefix='' mesh_dir='package://xavbot_description/meshes'">
+
+  <!-- Constants for robot dimensions -->
+  <xacro:property name="PI" value="3.1415926535897931"/>
+
+        <!-- link0 -->
+      <joint name="${prefix}link0_joint" type="fixed">
+        <parent link="${prefix}base_link"/>
+        <child link="${prefix}link0"/>
+        <origin xyz="0.21575 0.185 0.068" rpy="${PI/2} 0 0"/>
+        <axis xyz="0 0 0"/>
+        <dynamics damping="0.2"/>
+        <limit
+          lower="-${PI/4}"
+          upper="${PI/2}"
+          effort="4"
+          velocity="4.5">
+        </limit>
+      </joint>
+
+      <link name="${prefix}link0">
+        <!-- <collision>
+          <origin xyz="0 0 0.05" rpy="0 0 0"/>
+          <geometry>
+            <mesh filename="${mesh_dir}/collision/link0.stl" scale="0.001 0.001 0.001"/>
+          </geometry>
+        </collision> -->
+
+        <visual>
+          <origin xyz="0 0 0" rpy="0 0 0"/>
+          <geometry>
+            <mesh filename="${mesh_dir}/visual/link0.stl" scale="0.001 0.001 0.001"/>
+          </geometry>
+          <material name="grey"/>
+        </visual>
+      </link>
+
+      <!-- link1 -->
+      <joint name="${prefix}link1_joint" type="revolute">
+        <parent link="${prefix}link0"/>
+        <child link="${prefix}link1"/>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <axis xyz="0 0 1"/>
+        <dynamics damping="0.2"/>
+        <limit
+          lower="-${PI/2}"
+          upper="${PI/2}"
+          effort="4"
+          velocity="4.5">
+        </limit>
+      </joint>
+
+      <link name="${prefix}link1">
+        <!-- <collision>
+          <origin xyz="0 0 0.05" rpy="0 0 0"/>
+          <geometry>
+            <box size="0.02 0.02 0.1"/>
+          </geometry>
+        </collision> -->
+
+        <visual>
+          <origin xyz="0 0 0" rpy="0 0 0"/>
+          <geometry>
+            <mesh filename="${mesh_dir}/visual/link1.stl" scale="0.001 0.001 0.001"/>
+          </geometry>
+          <material name="grey"/>
+        </visual>
+      </link>
+
+      <!-- link2 -->
+      <joint name="${prefix}link2_joint" type="revolute">
+        <parent link="${prefix}link1"/>
+        <child link="${prefix}link2"/>
+        <origin xyz="0 0.1 0" rpy="0 0 0"/>
+        <axis xyz="0 0 1"/>
+        <dynamics damping="0.2"/>
+        <limit
+          lower="-${PI/2}"
+          upper="${PI/2}"
+          effort="4"
+          velocity="4.5">
+        </limit>
+      </joint>
+
+      <link name="${prefix}link2">
+        <!-- <collision>
+          <origin xyz="0 0 0.015" rpy="0 0 0"/>
+          <geometry>
+            <box size="0.02 0.02 0.03"/>
+          </geometry>
+        </collision> -->
+
+        <visual>
+          <origin xyz="0 0 0" rpy="0 0 0"/>
+          <geometry>
+            <mesh filename="${mesh_dir}/visual/link2.stl" scale="0.001 0.001 0.001"/>
+          </geometry>
+          <material name="grey"/>
+        </visual>
+      </link>
+
+      <!-- link3 -->
+      <joint name="${prefix}link3_joint" type="revolute">
+        <parent link="${prefix}link2"/>
+        <child link="${prefix}link3"/>
+        <origin xyz="0.130 0.038 0" rpy="0 0 -${PI/2}"/>
+        <axis xyz="0 0 1 "/>
+        <dynamics damping="0.2"/>
+        <limit
+          lower="-${PI/2}"
+          upper="${3 * PI/4}"
+          effort="4"
+          velocity="4.5">
+        </limit>
+      </joint>
+
+      <link name="${prefix}link3">
+        <!-- <collision>
+          <origin xyz="0 0 0.015" rpy="0 0 0"/>
+          <geometry>
+            <box size="0.02 0.02 0.03"/>
+          </geometry>
+        </collision> -->
+
+        <visual>
+          <origin xyz="0 0 0" rpy="0 0 0"/>
+          <geometry>
+            <mesh filename="${mesh_dir}/visual/link3.stl" scale="0.001 0.001 0.001"/>
+          </geometry>
+          <material name="grey"/>
+        </visual>
+      </link>
+
+      <!-- link4 -->
+      <joint name="${prefix}link4_joint" type="revolute">
+        <parent link="${prefix}link3"/>
+        <child link="${prefix}link4"/>
+        <origin xyz="0 0.043 -0.012" rpy="${PI/2} 0 ${PI/2}"/>
+        <axis xyz="0 0 1"/>
+        <dynamics damping="0.2"/>
+        <limit
+          lower="-${PI}"
+          upper="${PI}"
+          effort="4"
+          velocity="4.5">
+        </limit>
+      </joint>
+
+      <link name="${prefix}link4">
+        <!-- <collision>
+
+          <origin xyz="0 0 0.015" rpy="0 0 0"/>
+          <geometry>
+            <box size="0.02 0.02 0.03"/>
+          </geometry>
+        </collision> -->
+
+        <visual>
+          <origin xyz="0 0 0" rpy="0 0 0"/>
+          <geometry>
+            <mesh filename="${mesh_dir}/visual/link4.stl" scale="0.001 0.001 0.001"/>
+          </geometry>
+          <material name="grey"/>
+        </visual>
+      </link>
+
+      <!-- tool0 -->
+      <joint name="${prefix}tool0_joint" type="fixed">
+        <parent link="${prefix}link4"/>
+        <child link="${prefix}tool0"/>
+        <origin xyz="0 0 0.08" rpy="0 ${-PI/2} 0"/>
+      </joint>
+
+      <link name="${prefix}tool0"/>
+
+  </xacro:macro>
+
+</robot>

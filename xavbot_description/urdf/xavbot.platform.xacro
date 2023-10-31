@@ -6,8 +6,8 @@
   <!-- Constants for robot dimensions -->
   <xacro:property name="PI" value="3.1415926535897931"/>
   <xacro:property name="base_mass" value="1.0" /> <!-- arbitrary value for base mass -->
-  <xacro:property name="base_width" value="0.11" />
-  <xacro:property name="base_length" value="0.12" />
+  <xacro:property name="base_width" value="0.25" />
+  <xacro:property name="base_length" value="0.25" />
   <xacro:property name="base_height" value="0.05" />
   <xacro:property name="wheel_mass" value="0.02" /> <!-- arbitrary value for wheel mass -->
   <xacro:property name="wheel_length" value="0.024" />
@@ -17,7 +17,7 @@
   <!-- Base Link -->
   <link name="${prefix}base_link">
     <collision>
-      <origin xyz="0.125 0.125 ${wheel_radius + 0.04}" rpy="0 0 0"/>
+      <origin xyz="${base_width / 2} ${base_length / 2} ${wheel_radius + 0.04}" rpy="0 0 0"/>
       <geometry>
         <box size="0.25 0.25 0.08"/>
       </geometry>
@@ -32,7 +32,7 @@
     </visual>
 
     <inertial>
-      <origin xyz="0 0 ${wheel_radius + 0.04}" rpy="0 0 0"/>
+      <origin xyz="${base_width / 2} ${base_length / 2} ${wheel_radius + base_height / 2}" rpy="0 0 0"/>
       <mass value="${base_mass}"/>
       <inertia
         ixx="${base_mass / 12.0 * (base_length*base_length + base_height*base_height)}" ixy="0.0" ixz="0.0"

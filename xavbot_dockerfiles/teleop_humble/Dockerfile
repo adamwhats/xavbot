@@ -4,6 +4,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update \
    && apt-get -y install --no-install-recommends ros-$ROS_DISTRO-rviz2 \
    ros-$ROS_DISTRO-joint-state-publisher-gui \
+   ros-$ROS_DISTRO-moveit-setup-assistant \
    ros-$ROS_DISTRO-teleop-twist-keyboard \
    ros-$ROS_DISTRO-xacro \
    #

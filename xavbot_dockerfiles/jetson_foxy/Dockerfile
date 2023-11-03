@@ -16,13 +16,12 @@ RUN apt-get update && apt-get install -y \
     ros-foxy-hardware-interface \
     ros-foxy-joint-state-broadcaster \
     ros-foxy-joint-state-publisher-gui \
-    # ros-foxy-nav2-bringup \
+    ros-foxy-nav2-bringup \
     # ros-foxy-navigation2 \
     # ros-foxy-robot-localization \
     ros-foxy-robot-state-publisher \
     ros-foxy-ros2-control \
-    # ros-foxy-rviz2 \
-    # ros-foxy-spatio-temporal-voxel-layer \
+    ros-foxy-spatio-temporal-voxel-layer \
     ros-foxy-xacro
 
 RUN pip install \

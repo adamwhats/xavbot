@@ -37,6 +37,11 @@ struct Config
   int rl_port = 0;
   int rr_port = 0;
   int* wheel_ports[4] = {&fl_port, &fr_port, &rl_port, &rr_port};
+  int fl_direction = 0;
+  int fr_direction = 0;
+  int rl_direction = 0;
+  int rr_direction = 0;
+  int* wheel_directions[4] = {&fl_direction, &fr_direction, &rl_direction, &rr_direction};
   std::string device = "";
   int timeout_ms = 0;
 };

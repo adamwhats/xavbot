@@ -21,6 +21,10 @@ hardware_interface::return_type XavBotHardware::configure(const hardware_interfa
   cfg_.fr_port = std::stoi(info_.hardware_parameters["fr_port"]);
   cfg_.rl_port = std::stoi(info_.hardware_parameters["rl_port"]);
   cfg_.rr_port = std::stoi(info_.hardware_parameters["rr_port"]);
+  cfg_.fl_direction = std::stoi(info_.hardware_parameters["fl_direction"]);
+  cfg_.fr_direction = std::stoi(info_.hardware_parameters["fr_direction"]);
+  cfg_.rl_direction = std::stoi(info_.hardware_parameters["rl_direction"]);
+  cfg_.rr_direction = std::stoi(info_.hardware_parameters["rr_direction"]);
   cfg_.device = info_.hardware_parameters["device"];
   cfg_.timeout_ms = std::stoi(info_.hardware_parameters["timeout_ms"]);
 
@@ -126,7 +130,15 @@ hardware_interface::return_type XavBotHardware::read()
 
 hardware_interface::return_type XavBotHardware::write()
 {
-  motor_controller_.set_velocities(wheels_.cmd);
+
+  // Flip velocities to compensate for motor mounting direction
+  std::array<double, 4> direction_corrected_vels;
+  for (auto i = 0u; i < 4; i++)
+  {
+    direction_corrected_vels[i] = wheels_.cmd[i] * *cfg_.wheel_directions[*cfg_.wheel_ports[i]];
+  }
+  
+  motor_controller_.set_velocities(direction_corrected_vels);
   return hardware_interface::return_type::OK;
 }
 

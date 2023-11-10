@@ -8,6 +8,8 @@ Panels:
         - /Status1
         - /RobotModel1
         - /RobotModel1/Mass Properties1
+        - /TF1
+        - /TF1/Frames1
       Splitter Ratio: 0.5
     Tree Height: 725
   - Class: rviz_common/Selection
@@ -71,17 +73,6 @@ Visualization Manager:
           Alpha: 1
           Show Axes: false
           Show Trail: false
-          Value: true
-        front_left_wheel:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        front_right_wheel:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
         link0:
           Alpha: 1
           Show Axes: false
@@ -103,16 +94,6 @@ Visualization Manager:
           Show Trail: false
           Value: true
         link4:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        rear_left_wheel:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        rear_right_wheel:
           Alpha: 1
           Show Axes: false
           Show Trail: false
@@ -133,15 +114,11 @@ Visualization Manager:
       Enabled: true
       Frame Timeout: 15
       Frames:
-        All Enabled: true
+        All Enabled: false
         base_link:
-          Value: true
-        front_left_wheel:
-          Value: true
-        front_right_wheel:
-          Value: true
+          Value: false
         link0:
-          Value: true
+          Value: false
         link1:
           Value: true
         link2:
@@ -149,13 +126,9 @@ Visualization Manager:
         link3:
           Value: true
         link4:
-          Value: true
-        rear_left_wheel:
-          Value: true
-        rear_right_wheel:
-          Value: true
+          Value: false
         tool0:
-          Value: true
+          Value: false
       Marker Scale: 0.30000001192092896
       Name: TF
       Show Arrows: true
@@ -163,10 +136,6 @@ Visualization Manager:
       Show Names: true
       Tree:
         base_link:
-          front_left_wheel:
-            {}
-          front_right_wheel:
-            {}
           link0:
             link1:
               link2:
@@ -174,10 +143,6 @@ Visualization Manager:
                   link4:
                     tool0:
                       {}
-          rear_left_wheel:
-            {}
-          rear_right_wheel:
-            {}
       Update Interval: 0
       Value: true
   Enabled: true
@@ -226,25 +191,25 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz_default_plugins/Orbit
-      Distance: 0.6314619183540344
+      Distance: 0.4099155366420746
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
         Swap Stereo Eyes: false
         Value: false
       Focal Point:
-        X: 0.1676270216703415
-        Y: 0.22252053022384644
-        Z: -0.0658523216843605
+        X: 0.026390548795461655
+        Y: 0.007509168237447739
+        Z: 0.12327205389738083
       Focal Shape Fixed Size: true
       Focal Shape Size: 0.05000000074505806
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 0.27520307898521423
+      Pitch: 0.7952029705047607
       Target Frame: <Fixed Frame>
       Value: Orbit (rviz)
-      Yaw: 1.3153742551803589
+      Yaw: 0.383561909198761
     Saved: ~
 Window Geometry:
   Displays:

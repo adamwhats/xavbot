@@ -12,6 +12,7 @@
       
       <joint name="${prefix}link1_joint">
         <param name="id">10</param>
+        <param name="offset">3.141592</param>
         <command_interface name="position"/>
         <command_interface name="velocity"/>
         <state_interface name="position"/>
@@ -21,6 +22,7 @@
       
       <joint name="${prefix}link2_joint">
         <param name="id">11</param>
+        <param name="offset">3.141592</param>
         <command_interface name="position"/>
         <command_interface name="velocity"/>
         <state_interface name="position"/>
@@ -30,6 +32,7 @@
 
       <joint name="${prefix}link3_joint">
         <param name="id">12</param>
+        <param name="offset">3.141592</param>
         <command_interface name="position"/>
         <command_interface name="velocity"/>
         <state_interface name="position"/>
@@ -39,6 +42,7 @@
       
       <joint name="${prefix}link4_joint">
         <param name="id">13</param>
+        <param name="offset">3.141592</param>
         <command_interface name="position"/>
         <command_interface name="velocity"/>
         <state_interface name="position"/>

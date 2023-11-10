@@ -1,3 +1,7 @@
+import os
+
+import yaml
+from ament_index_python import get_package_share_directory
 from launch import LaunchDescription
 from launch_ros.actions import Node
 from launch_ros.substitutions import FindPackageShare
@@ -6,6 +10,19 @@ from launch.conditions import IfCondition
 from launch.event_handlers import OnProcessExit
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import Command, FindExecutable, PathJoinSubstitution, LaunchConfiguration
+
+from moveit_configs_utils import MoveItConfigsBuilder
+from moveit_configs_utils.launches import generate_move_group_launch
+
+def load_yaml(package_name, file_path):
+    package_path = get_package_share_directory(package_name)
+    absolute_file_path = os.path.join(package_path, file_path)
+
+    try:
+        with open(absolute_file_path, 'r') as file:
+            return yaml.safe_load(file)
+    except EnvironmentError:  # parent of IOError, OSError *and* WindowsError where available
+        return None
 
 
 def generate_launch_description():
@@ -64,8 +81,22 @@ def generate_launch_description():
         )
     )
 
+    moveit_config = MoveItConfigsBuilder("xavbot", package_name="xavbot_moveit_config").to_moveit_configs()
+    
+    move_group = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(
+            str(moveit_config.package_path / "launch/move_group.launch.py")
+        ),
+    )
+
+    spawners = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(
+            str(moveit_config.package_path / "launch/spawn_controllers.launch.py")
+        ),
+    )
+
     rviz_config_file = PathJoinSubstitution(
-    [FindPackageShare("xavbot_bringup"), "rviz", "config.rviz"])
+    [FindPackageShare("xavbot_bringup"), "rviz", "moveit.rviz"])
 
     rviz_node = Node(
         package="rviz2",
@@ -82,6 +113,8 @@ def generate_launch_description():
         joint_state_broadcaster_spawner,
         delay_robot_controller_spawner_after_joint_state_broadcaster_spawner,
         rviz_node,
+        move_group,
+        spawners
     ]
 
     return LaunchDescription(nodes)

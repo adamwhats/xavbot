@@ -12,15 +12,7 @@
         <joint name="${prefix}link0_joint" type="fixed">
           <parent link="${prefix}base_link"/>
           <child link="${prefix}link0"/>
-          <origin xyz="0 0 0" rpy="${PI/2} 0 0"/>
-          <axis xyz="0 0 0"/>
-          <dynamics damping="0.2"/>
-          <limit
-            lower="-${PI/2}"
-            upper="${PI/2}"
-            effort="4"
-            velocity="6">
-          </limit>
+          <origin xyz="0 0 0" rpy="${PI/2} 0 ${PI}"/>
         </joint>
       </xacro:if>
 
@@ -28,15 +20,7 @@
         <joint name="${prefix}link0_joint" type="fixed">
           <parent link="${prefix}base_link"/>
           <child link="${prefix}link0"/>
-          <origin xyz="0.210 0.200 0.073" rpy="${PI/2} 0 0"/>
-          <axis xyz="0 0 0"/>
-          <dynamics damping="0.2"/>
-          <limit
-            lower="-${PI/2}"
-            upper="${PI/2}"
-            effort="4"
-            velocity="6">
-          </limit>
+          <origin xyz="0.210 0.200 0.073" rpy="${PI/2} 0 ${PI}"/>
         </joint>
       </xacro:unless>
 
@@ -71,13 +55,13 @@
         <parent link="${prefix}link0"/>
         <child link="${prefix}link1"/>
         <origin xyz="0 0 0" rpy="0 0 0"/>
-        <axis xyz="0 0 -1"/>
+        <axis xyz="0 0 1"/>
         <dynamics damping="0.2"/>
         <limit
-          lower="${PI/2}"
-          upper="${3* PI/2}"
-          effort="4"
-          velocity="6">
+          lower="${-PI/2}"
+          upper="${PI/2}"
+          effort="4.0"
+          velocity="6.1">
         </limit>
       </joint>
 
@@ -112,13 +96,13 @@
         <parent link="${prefix}link1"/>
         <child link="${prefix}link2"/>
         <origin xyz="0 0.1 0" rpy="0 0 0"/>
-        <axis xyz="0 0 -1"/>
+        <axis xyz="0 0 1"/>
         <dynamics damping="0.2"/>
         <limit
-          lower="${PI/9}"
-          upper="${3 * PI/2}"
-          effort="4"
-          velocity="6">
+          lower="${-8 * PI/9}"
+          upper="${PI/2}"
+          effort="4.0"
+          velocity="6.1">
         </limit>
       </joint>
 
@@ -143,14 +127,14 @@
       <joint name="${prefix}link3_joint" type="revolute">
         <parent link="${prefix}link2"/>
         <child link="${prefix}link3"/>
-        <origin xyz="0.1 0.04 0" rpy="0 0 ${-PI/2}"/>
-        <axis xyz="0 0 -1 "/>
+        <origin xyz="-0.1 0.04 0" rpy="0 0 0"/>
+        <axis xyz="0 0 1 "/>
         <dynamics damping="0.2"/>
         <limit
-          lower="${PI/2}"
-          upper="${3 * PI/2}"
-          effort="4"
-          velocity="6">
+          lower="${-PI/2}"
+          upper="${PI/2}"
+          effort="4.0"
+          velocity="6.1">
         </limit>
       </joint>
 
@@ -175,14 +159,14 @@
       <joint name="${prefix}link4_joint" type="revolute">
         <parent link="${prefix}link3"/>
         <child link="${prefix}link4"/>
-        <origin xyz="0 0.061 0" rpy="${-PI/2} ${PI/2} 0"/>
+        <origin xyz="-0.061 0 0" rpy="0 ${-PI/2} 0"/>
         <axis xyz="0 0 1"/>
         <dynamics damping="0.2"/>
         <limit
           lower="-${PI}"
           upper="${PI}"
-          effort="4"
-          velocity="6">
+          effort="4.0"
+          velocity="6.1">
         </limit>
       </joint>
 

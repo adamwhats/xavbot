@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="xavbot">
 
-  <xacro:macro name="xavbot_platform" params="prefix='' mesh_dir='package://xavbot_description/meshes'">
+  <xacro:macro name="xavbot_platform" params="prefix='' mesh_dir='package://xavbot_description/meshes' ">
 
   <!-- Constants for robot dimensions -->
   <xacro:property name="PI" value="3.1415926535897931"/>

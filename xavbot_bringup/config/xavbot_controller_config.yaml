@@ -1,12 +1,18 @@
 controller_manager:
   ros__parameters:
-    update_rate: 20  # Hz
+    update_rate: 100  # Hz
 
     joint_state_broadcaster:
       type: joint_state_broadcaster/JointStateBroadcaster
 
     xavbot_controller:
       type: mecanum_drive_controller/MecanumDriveController
+
+    velocity_controller:
+      type: velocity_controllers/JointGroupVelocityController
+
+    joint_trajectory_controller:
+      type: joint_trajectory_controller/JointTrajectoryController    
 
 xavbot_controller:
   ros__parameters:
@@ -17,3 +23,27 @@ xavbot_controller:
     wheel_radius: 0.0175
     wheelbase_width: 0.274
     wheelbase_length: 0.188
+
+velocity_controller:
+  ros__parameters:
+    joints:
+      - link1_joint
+      - link2_joint
+      - link3_joint
+      - link4_joint
+      # - gripper
+
+joint_trajectory_controller:
+  ros__parameters:
+    joints:
+      - link1_joint
+      - link2_joint
+      - link3_joint
+      - link4_joint
+      # - gripper
+
+    command_interfaces:
+      - position
+
+    state_interfaces:
+      - position

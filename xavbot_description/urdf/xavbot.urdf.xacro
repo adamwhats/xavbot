@@ -6,6 +6,10 @@
   <!-- Import Geometry -->
   <xacro:include filename="$(find xavbot_description)/urdf/xavbot.platform.xacro" />
   <xacro:xavbot_platform prefix="$(arg prefix)" mesh_dir="package://xavbot_description/meshes" />
+  <xacro:include filename="$(find realsense2_description)/urdf/_d435i.urdf.xacro"/>
+  <xacro:sensor_d435i parent="base_link" use_nominal_extrinsics="false">
+    <origin xyz="0.03425 0.07 0.193" rpy="0 0 0"/>
+  </xacro:sensor_d435i>
 
   <!-- Import xavbot ros2_control description -->
   <xacro:include filename="$(find xavbot_description)/urdf/xavbot.platform.ros2_control.xacro" />

@@ -6,7 +6,6 @@ RUN apt-get update \
    ros-$ROS_DISTRO-joint-state-publisher-gui \
    ros-$ROS_DISTRO-teleop-twist-keyboard \
    ros-$ROS_DISTRO-xacro \
-
    # Temporary imports for xavbot_arm development
    ros-$ROS_DISTRO-dynamixel-workbench-toolbox \
    ros-$ROS_DISTRO-hardware-interface \
@@ -17,7 +16,6 @@ RUN apt-get update \
    ros-$ROS_DISTRO-realsense2-camera \
    ros-$ROS_DISTRO-realsense2-description \
    libserial-dev \
-
    #
    # Clean up
    && apt-get autoremove -y \

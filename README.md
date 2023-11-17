@@ -1,8 +1,8 @@
 # XavBot
 
-My journey into building a robot from scratch, with the initial aim of exploring the Nav2 framework. Future goals are experimenting with building my own SLAM and perception algorithms as well as Gazebo/ Isaac Sim simulation.
+My journey into building a robot from scratch, with the initial aim of exploring the Nav2 and MoveIt2 frameworks.
 
-XavBot is a small holonomic robot based around the NVIDIA Jetson Xavier NX with a Pimoroni Motor2040 motor control board and Intel RealSense D415 RGB-D camera.
+XavBot is a small holonomic robot with a 4 DoF manuipulator based around the NVIDIA Jetson Xavier NX.
 
 # Packages
 

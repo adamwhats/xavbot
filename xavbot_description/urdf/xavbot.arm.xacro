@@ -61,7 +61,7 @@
           lower="${-PI/2}"
           upper="${PI/2}"
           effort="4.0"
-          velocity="6.1">
+          velocity="5.5">
         </limit>
       </joint>
 
@@ -102,7 +102,7 @@
           lower="${-8 * PI/9}"
           upper="${PI/2}"
           effort="4.0"
-          velocity="6.1">
+          velocity="5.5">
         </limit>
       </joint>
 
@@ -134,7 +134,7 @@
           lower="${-PI/2}"
           upper="${PI/2}"
           effort="4.0"
-          velocity="6.1">
+          velocity="5.5">
         </limit>
       </joint>
 
@@ -166,7 +166,7 @@
           lower="-${PI}"
           upper="${PI}"
           effort="4.0"
-          velocity="6.1">
+          velocity="5.5">
         </limit>
       </joint>
 
@@ -187,14 +187,95 @@
         </visual>
       </link>
 
-      <!-- tool0 -->
-      <joint name="${prefix}tool0_joint" type="fixed">
+      <!-- hand_tcp -->
+      <joint name="${prefix}tcp_joint" type="fixed">
         <parent link="${prefix}link4"/>
-        <child link="${prefix}tool0"/>
+        <child link="${prefix}tcp"/>
         <origin xyz="0 0 0.08" rpy="${PI/2} ${-PI/2} 0"/>
       </joint>
 
-      <link name="${prefix}tool0"/>
+      <link name="${prefix}tcp"/>
+
+      <!-- gripper_crank -->
+      <joint name="${prefix}gripper_joint" type="revolute">
+        <parent link="${prefix}link4"/>
+        <child link="${prefix}gripper_crank"/>
+        <origin xyz="0 0 0.04" rpy="0 0 0"/>
+        <axis xyz="0 0 1"/>
+        <limit
+          lower="0"
+          upper="1.047"
+          effort="4.0"
+          velocity="5.5">
+        </limit>
+      </joint>
+        
+      <link name="${prefix}gripper_crank"/>
+
+      <!-- rightfinger -->
+      <joint name="${prefix}rightfinger_joint" type="prismatic">
+        <parent link="${prefix}link4"/>
+        <child link="${prefix}rightfinger"/>
+        <origin xyz="0 0 0.045" rpy="0 0 0"/>
+        <axis xyz="-1 0 0"/>
+        <limit
+          lower="0"
+          upper="0.0265"
+          effort="9.9"
+          velocity="9.9">
+        </limit>
+        <mimic joint="${prefix}gripper_joint" multiplier="0.024446"/>
+      </joint>
+
+      <link name="${prefix}rightfinger">
+        <collision>
+          <origin xyz="0 0 0" rpy="0 0 0"/>
+          <geometry>
+            <mesh filename="${mesh_dir}/collision/finger.stl" scale="0.001 0.001 0.001"/>
+          </geometry>
+        </collision>
+
+        <visual>
+          <origin xyz="0 0 0" rpy="0 0 0"/>
+          <geometry>
+            <mesh filename="${mesh_dir}/visual/finger.stl" scale="0.001 0.001 0.001"/>
+          </geometry>
+          <material name="grey"/>
+        </visual>
+      </link>
+
+      <!-- leftfinger -->
+      <joint name="${prefix}leftfinger_joint" type="prismatic">
+        <parent link="${prefix}link4"/>
+        <child link="${prefix}leftfinger"/>
+        <origin xyz="0 0 0.045" rpy="0 0 ${PI}"/>
+        <axis xyz="-1 0 0"/>
+        <limit
+          lower="0"
+          upper="0.0265"
+          effort="9.9"
+          velocity="9.9">
+        </limit>
+        <mimic joint="${prefix}gripper_joint" multiplier="0.024446"/>
+      </joint>
+
+      <link name="${prefix}leftfinger">
+        <collision>
+          <origin xyz="0 0 0" rpy="0 0 0"/>
+          <geometry>
+            <mesh filename="${mesh_dir}/collision/finger.stl" scale="0.001 0.001 0.001"/>
+          </geometry>
+        </collision>
+
+        <visual>
+          <origin xyz="0 0 0" rpy="0 0 0"/>
+          <geometry>
+            <mesh filename="${mesh_dir}/visual/finger.stl" scale="0.001 0.001 0.001"/>
+          </geometry>
+          <material name="grey"/>
+        </visual>
+      </link>
+
 
   </xacro:macro>
 

@@ -5,9 +5,9 @@ moveit_setup_assistant_config:
   srdf:
     relative_path: config/xavbot.srdf
   package_settings:
-    author_name: adam.watts
+    author_name: Adam Watts
     author_email: adamlwatts@msn.com
-    generated_timestamp: 1699649792
+    generated_timestamp: 1700843337
   control_xacro:
     command:
       - position

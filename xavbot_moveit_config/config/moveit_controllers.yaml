@@ -5,6 +5,7 @@ moveit_controller_manager: moveit_simple_controller_manager/MoveItSimpleControll
 moveit_simple_controller_manager:
   controller_names:
     - xavbot_arm_controller
+    - xavbot_gripper_controller
 
   xavbot_arm_controller:
     type: FollowJointTrajectory
@@ -15,3 +16,11 @@ moveit_simple_controller_manager:
       - link2_joint
       - link3_joint
       - link4_joint
+    action_ns: follow_joint_trajectory
+    default: true
+  xavbot_gripper_controller:
+    type: GripperCommand
+    joints:
+      - gripper_joint
+    action_ns: gripper_cmd
+    default: true

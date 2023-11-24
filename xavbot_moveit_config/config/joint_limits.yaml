@@ -8,23 +8,38 @@ default_acceleration_scaling_factor: 0.1
 # Specific joint properties can be changed with the keys [max_position, min_position, max_velocity, max_acceleration]
 # Joint limits can be turned off with [has_velocity_limits, has_acceleration_limits]
 joint_limits:
+  gripper_joint:
+    has_velocity_limits: true
+    max_velocity: 5.5
+    has_acceleration_limits: false
+    max_acceleration: 0
+  leftfinger_joint:
+    has_velocity_limits: true
+    max_velocity: 9.9000000000000004
+    has_acceleration_limits: false
+    max_acceleration: 0
   link1_joint:
     has_velocity_limits: true
-    max_velocity: 6.1
+    max_velocity: 5.5
     has_acceleration_limits: false
     max_acceleration: 0
   link2_joint:
     has_velocity_limits: true
-    max_velocity: 6.1
+    max_velocity: 5.5
     has_acceleration_limits: false
     max_acceleration: 0
   link3_joint:
     has_velocity_limits: true
-    max_velocity: 6.1
+    max_velocity: 5.5
     has_acceleration_limits: false
     max_acceleration: 0
   link4_joint:
     has_velocity_limits: true
-    max_velocity: 6.1
+    max_velocity: 5.5
+    has_acceleration_limits: false
+    max_acceleration: 0
+  rightfinger_joint:
+    has_velocity_limits: true
+    max_velocity: 9.9000000000000004
     has_acceleration_limits: false
     max_acceleration: 0

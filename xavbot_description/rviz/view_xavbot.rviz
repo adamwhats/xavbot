@@ -73,6 +73,35 @@ Visualization Manager:
           Alpha: 1
           Show Axes: false
           Show Trail: false
+          Value: true
+        camera_bottom_screw_frame:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        camera_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        front_left_wheel:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        front_right_wheel:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        hand_tcp:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        leftfinger:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
         link0:
           Alpha: 1
           Show Axes: false
@@ -98,10 +127,21 @@ Visualization Manager:
           Show Axes: false
           Show Trail: false
           Value: true
-        tool0:
+        rear_left_wheel:
           Alpha: 1
           Show Axes: false
           Show Trail: false
+          Value: true
+        rear_right_wheel:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        rightfinger:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
       Mass Properties:
         Inertia: false
         Mass: false
@@ -117,8 +157,20 @@ Visualization Manager:
         All Enabled: false
         base_link:
           Value: false
+        camera_bottom_screw_frame:
+          Value: true
+        camera_link:
+          Value: true
+        front_left_wheel:
+          Value: true
+        front_right_wheel:
+          Value: true
+        hand_tcp:
+          Value: true
+        leftfinger:
+          Value: true
         link0:
-          Value: false
+          Value: true
         link1:
           Value: true
         link2:
@@ -126,9 +178,13 @@ Visualization Manager:
         link3:
           Value: true
         link4:
-          Value: false
-        tool0:
-          Value: false
+          Value: true
+        rear_left_wheel:
+          Value: true
+        rear_right_wheel:
+          Value: true
+        rightfinger:
+          Value: true
       Marker Scale: 0.30000001192092896
       Name: TF
       Show Arrows: true
@@ -136,13 +192,28 @@ Visualization Manager:
       Show Names: true
       Tree:
         base_link:
+          camera_bottom_screw_frame:
+            camera_link:
+              {}
+          front_left_wheel:
+            {}
+          front_right_wheel:
+            {}
           link0:
             link1:
               link2:
                 link3:
                   link4:
-                    tool0:
+                    hand_tcp:
                       {}
+                    leftfinger:
+                      {}
+                    rightfinger:
+                      {}
+          rear_left_wheel:
+            {}
+          rear_right_wheel:
+            {}
       Update Interval: 0
       Value: true
   Enabled: true
@@ -191,25 +262,25 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz_default_plugins/Orbit
-      Distance: 0.4099155366420746
+      Distance: 0.9553694725036621
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
         Swap Stereo Eyes: false
         Value: false
       Focal Point:
-        X: 0.026390548795461655
-        Y: 0.007509168237447739
-        Z: 0.12327205389738083
+        X: 0.03908045217394829
+        Y: 0.01723882555961609
+        Z: 0.0894206166267395
       Focal Shape Fixed Size: true
       Focal Shape Size: 0.05000000074505806
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 0.7952029705047607
+      Pitch: 0.40020325779914856
       Target Frame: <Fixed Frame>
       Value: Orbit (rviz)
-      Yaw: 0.383561909198761
+      Yaw: 0.6135701537132263
     Saved: ~
 Window Geometry:
   Displays:

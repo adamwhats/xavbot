@@ -3,11 +3,13 @@ FROM althack/ros2:humble-dev
 ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update \
    && apt-get -y install --no-install-recommends ros-$ROS_DISTRO-rviz2 \
+   ros-$ROS_DISTRO-image-transport-plugins \
    ros-$ROS_DISTRO-joint-state-publisher-gui \
    ros-$ROS_DISTRO-teleop-twist-keyboard \
    ros-$ROS_DISTRO-xacro \
    # Temporary imports for xavbot_arm development
    ros-$ROS_DISTRO-dynamixel-workbench-toolbox \
+   ros-$ROS_DISTRO-gripper-controllers \
    ros-$ROS_DISTRO-hardware-interface \
    ros-$ROS_DISTRO-moveit \
    ros-$ROS_DISTRO-ros2-control \

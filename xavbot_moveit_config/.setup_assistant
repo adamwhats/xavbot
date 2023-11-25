@@ -1,25 +1,10 @@
 moveit_setup_assistant_config:
   urdf:
     package: xavbot_description
-    relative_path: urdf/xavbot.arm.urdf.xacro
+    relative_path: urdf/xavbot.urdf.xacro
   srdf:
     relative_path: config/xavbot.srdf
   package_settings:
     author_name: Adam Watts
     author_email: adamlwatts@msn.com
-    generated_timestamp: 1700843337
-  control_xacro:
-    command:
-      - position
-    state:
-      - position
-      - velocity
-  modified_urdf:
-    xacros:
-      - control_xacro
-  control_xacro:
-    command:
-      - position
-    state:
-      - position
-      - velocity
+    generated_timestamp: 1700918641

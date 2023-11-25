@@ -5,7 +5,7 @@
 
     <ros2_control name="${name}" type="system">
       <hardware>
-        <plugin>xavbot_hardware/XavBotHardware</plugin>
+        <plugin>xavbot_hardware/XavbotHardware</plugin>
         <param name="fl_name">front_left_wheel_joint</param>
         <param name="fr_name">front_right_wheel_joint</param>
         <param name="rl_name">rear_left_wheel_joint</param>

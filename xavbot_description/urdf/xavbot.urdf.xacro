@@ -16,7 +16,7 @@
 
   <!-- Import xavbot ros2_control description -->
   <xacro:include filename="$(find xavbot_description)/urdf/xavbot.platform.ros2_control.xacro" />
-  <xacro:xavbot_platform_control name="xavbot" prefix="$(arg prefix)" />
+  <xacro:xavbot_platform_control name="xavbot_platform" prefix="$(arg prefix)" />
 
   <!-- Import Rviz colors -->
   <xacro:include filename="$(find xavbot_description)/urdf/xavbot.materials.xacro" />
@@ -30,7 +30,7 @@
 
     <!-- Import xavbot ros2_control description -->
     <xacro:include filename="$(find xavbot_description)/urdf/xavbot.arm.ros2_control.xacro" />
-    <xacro:xavbot_arm_control name="xavbot" prefix="$(arg prefix)" />
+    <xacro:xavbot_arm_control name="xavbot_arm" prefix="$(arg prefix)" />
 
   </xacro:if>
 

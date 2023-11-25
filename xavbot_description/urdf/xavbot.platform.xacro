@@ -19,7 +19,7 @@
     <collision>
       <origin xyz="${base_width / 2} ${base_length / 2} ${wheel_radius + 0.04}" rpy="0 0 0"/>
       <geometry>
-        <box size="0.25 0.25 0.08"/>
+        <box size="0.25 0.25 0.06"/>
       </geometry>
     </collision>
 

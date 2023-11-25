@@ -69,16 +69,25 @@ Visualization Manager:
         Expand Link Details: false
         Expand Tree: false
         Link Tree Style: Links in Alphabetic Order
-        base_link:
+        VIO_camera_bottom_screw_frame:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        VIO_camera_link:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        camera_bottom_screw_frame:
+        arm_camera_bottom_screw_frame:
           Alpha: 1
           Show Axes: false
           Show Trail: false
-        camera_link:
+        arm_camera_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        base_link:
           Alpha: 1
           Show Axes: false
           Show Trail: false
@@ -93,7 +102,7 @@ Visualization Manager:
           Show Axes: false
           Show Trail: false
           Value: true
-        hand_tcp:
+        gripper_crank:
           Alpha: 1
           Show Axes: false
           Show Trail: false
@@ -142,6 +151,10 @@ Visualization Manager:
           Show Axes: false
           Show Trail: false
           Value: true
+        tcp:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
       Mass Properties:
         Inertia: false
         Mass: false
@@ -155,17 +168,21 @@ Visualization Manager:
       Frame Timeout: 15
       Frames:
         All Enabled: false
+        VIO_camera_bottom_screw_frame:
+          Value: true
+        VIO_camera_link:
+          Value: true
+        arm_camera_bottom_screw_frame:
+          Value: true
+        arm_camera_link:
+          Value: true
         base_link:
           Value: false
-        camera_bottom_screw_frame:
-          Value: true
-        camera_link:
-          Value: true
         front_left_wheel:
           Value: true
         front_right_wheel:
           Value: true
-        hand_tcp:
+        gripper_crank:
           Value: true
         leftfinger:
           Value: true
@@ -185,6 +202,8 @@ Visualization Manager:
           Value: true
         rightfinger:
           Value: true
+        tcp:
+          Value: true
       Marker Scale: 0.30000001192092896
       Name: TF
       Show Arrows: true
@@ -192,8 +211,11 @@ Visualization Manager:
       Show Names: true
       Tree:
         base_link:
-          camera_bottom_screw_frame:
-            camera_link:
+          VIO_camera_bottom_screw_frame:
+            VIO_camera_link:
+              {}
+          arm_camera_bottom_screw_frame:
+            arm_camera_link:
               {}
           front_left_wheel:
             {}
@@ -204,11 +226,13 @@ Visualization Manager:
               link2:
                 link3:
                   link4:
-                    hand_tcp:
+                    gripper_crank:
                       {}
                     leftfinger:
                       {}
                     rightfinger:
+                      {}
+                    tcp:
                       {}
           rear_left_wheel:
             {}
@@ -262,25 +286,25 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz_default_plugins/Orbit
-      Distance: 0.9553694725036621
+      Distance: 0.5176920890808105
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
         Swap Stereo Eyes: false
         Value: false
       Focal Point:
-        X: 0.03908045217394829
-        Y: 0.01723882555961609
-        Z: 0.0894206166267395
+        X: 0.22852854430675507
+        Y: 0.0655144453048706
+        Z: 0.17134660482406616
       Focal Shape Fixed Size: true
       Focal Shape Size: 0.05000000074505806
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 0.40020325779914856
+      Pitch: 0.46020302176475525
       Target Frame: <Fixed Frame>
       Value: Orbit (rviz)
-      Yaw: 0.6135701537132263
+      Yaw: 5.666754722595215
     Saved: ~
 Window Geometry:
   Displays:

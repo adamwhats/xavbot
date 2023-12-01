@@ -5,16 +5,16 @@ controller_manager:
     joint_state_broadcaster:
       type: joint_state_broadcaster/JointStateBroadcaster
 
-    xavbot_controller:
+    xavbot_platform_controller:
       type: mecanum_drive_controller/MecanumDriveController
 
-    velocity_controller:
-      type: velocity_controllers/JointGroupVelocityController
+    xavbot_arm_controller:
+      type: joint_trajectory_controller/JointTrajectoryController
 
-    joint_trajectory_controller:
-      type: joint_trajectory_controller/JointTrajectoryController    
+    xavbot_gripper_controller:
+      type: position_controllers/GripperActionController  
 
-xavbot_controller:
+xavbot_platform_controller:
   ros__parameters:
     fl_name: "front_left_wheel_joint"
     fr_name: "front_right_wheel_joint"
@@ -24,26 +24,19 @@ xavbot_controller:
     wheelbase_width: 0.274
     wheelbase_length: 0.188
 
-velocity_controller:
+xavbot_arm_controller:
   ros__parameters:
     joints:
       - link1_joint
       - link2_joint
       - link3_joint
       - link4_joint
-      # - gripper
-
-joint_trajectory_controller:
-  ros__parameters:
-    joints:
-      - link1_joint
-      - link2_joint
-      - link3_joint
-      - link4_joint
-      # - gripper
-
     command_interfaces:
       - position
-
     state_interfaces:
       - position
+      - velocity
+      
+xavbot_gripper_controller:
+  ros__parameters:
+    joint: gripper_joint

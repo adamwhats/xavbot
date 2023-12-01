@@ -1,3 +1,5 @@
+from typing import List
+
 from launch import LaunchDescription
 from launch.actions import IncludeLaunchDescription, RegisterEventHandler
 from launch.conditions import IfCondition
@@ -7,6 +9,16 @@ from launch.substitutions import (Command, FindExecutable, LaunchConfiguration,
                                   PathJoinSubstitution)
 from launch_ros.actions import Node
 from launch_ros.substitutions import FindPackageShare
+from moveit_configs_utils import MoveItConfigsBuilder
+from moveit_configs_utils.launches import generate_move_group_launch
+
+
+def spawn_controllers(controllers: List[str]) -> List[Node]:
+    return [Node(package="controller_manager",
+                 executable="spawner",
+                 arguments=[controller, "--controller-manager", "/controller_manager"]
+                 ) for controller in controllers]
+        
 
 
 def generate_launch_description():
@@ -44,25 +56,29 @@ def generate_launch_description():
         arguments=["joint_state_broadcaster", "--controller-manager", "/controller_manager"],
     )
 
-    robot_controller_spawner = Node(
-        package="controller_manager",
-        executable="spawner",
-        arguments=["xavbot_controller", "--controller-manager", "/controller_manager"],
-    )
+    xavbot_controllers = [
+        "xavbot_platform_controller",
+        "xavbot_arm_controller",
+        "xavbot_gripper_controller"
+    ]
 
-    # Delay start of robot_controller after `joint_state_broadcaster`
-    delay_robot_controller_spawner_after_joint_state_broadcaster_spawner = RegisterEventHandler(
+    # Delay start of xavbot controllers after `joint_state_broadcaster`
+    xavbot_controllers_spawner = RegisterEventHandler(
         event_handler=OnProcessExit(
             target_action=joint_state_broadcaster_spawner,
-            on_exit=[robot_controller_spawner],
+            on_exit=[*spawn_controllers(xavbot_controllers)],
         )
     )
+
+    moveit_config = MoveItConfigsBuilder("xavbot", package_name="xavbot_moveit_config").to_moveit_configs()
+    move_group = generate_move_group_launch(moveit_config)
 
     nodes = [
         control_node,
         robot_state_pub_node,
         joint_state_broadcaster_spawner,
-        delay_robot_controller_spawner_after_joint_state_broadcaster_spawner,
+        xavbot_controllers_spawner,
+        move_group
     ]
 
     return LaunchDescription(nodes)

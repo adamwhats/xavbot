@@ -1,5 +1,5 @@
-#ifndef XAVBOT_CONTROLLER__MECANUM_DRIVE_CONTROLLER_HPP_
-#define XAVBOT_CONTROLLER__MECANUM_DRIVE_CONTROLLER_HPP_
+#ifndef MECANUM_DRIVE_CONTROLLER__MECANUM_DRIVE_CONTROLLER_HPP_
+#define MECANUM_DRIVE_CONTROLLER__MECANUM_DRIVE_CONTROLLER_HPP_
 
 #include <chrono>
 #include <cmath>
@@ -33,9 +33,9 @@ namespace mecanum_drive_controller
 
     controller_interface::InterfaceConfiguration state_interface_configuration() const override;
 
-    controller_interface::return_type update() override;
+    controller_interface::return_type update(const rclcpp::Time & time, const rclcpp::Duration & period) override;
 
-    controller_interface::return_type init(const std::string & controller_name) override;
+    CallbackReturn on_init() override;
 
     CallbackReturn on_configure(
       const rclcpp_lifecycle::State & previous_state) override;
@@ -56,12 +56,8 @@ namespace mecanum_drive_controller
       const rclcpp_lifecycle::State & previous_state) override;
 
   protected:
-      rclcpp::Subscription<Twist>::SharedPtr velocity_command_subsciption_;
+      rclcpp::Subscription<Twist>::SharedPtr velocity_command_subscription_;
       realtime_tools::RealtimeBuffer<std::shared_ptr<Twist>> velocity_command_ptr_;
-
-      std::shared_ptr<rclcpp::Publisher<nav_msgs::msg::Odometry>> odometry_publisher_ = nullptr;
-      std::shared_ptr<realtime_tools::RealtimePublisher<nav_msgs::msg::Odometry>> realtime_odometry_publisher_ = nullptr;
-
       std::string fl_name_;
       std::string fr_name_;
       std::string rl_name_;
@@ -72,11 +68,8 @@ namespace mecanum_drive_controller
 
       Eigen::Matrix<double, 4, 3> T_inv_;
       Eigen::Matrix<double, 3, 4> T_fw_;
-      Eigen::Vector3d odom_kinematics_;
-      rclcpp::Time last_time_;
-      double heading_ = 0;
-      geometry_msgs::msg::Pose odom_pose_;
+
 
   };
 }  // namespace mecanum_drive_controller
-#endif  // XAVBOT_CONTROLLER__MECANUM_DRIVE_CONTROLLER_HPP_
+#endif  // MECANUM_DRIVE_CONTROLLER__MECANUM_DRIVE_CONTROLLER_HPP_

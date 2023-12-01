@@ -1,11 +1,12 @@
 from launch import LaunchDescription
-from launch_ros.actions import Node
-from launch_ros.substitutions import FindPackageShare
-from launch.actions import RegisterEventHandler, IncludeLaunchDescription
+from launch.actions import IncludeLaunchDescription, RegisterEventHandler
 from launch.conditions import IfCondition
 from launch.event_handlers import OnProcessExit
 from launch.launch_description_sources import PythonLaunchDescriptionSource
-from launch.substitutions import Command, FindExecutable, PathJoinSubstitution, LaunchConfiguration
+from launch.substitutions import (Command, FindExecutable, LaunchConfiguration,
+                                  PathJoinSubstitution)
+from launch_ros.actions import Node
+from launch_ros.substitutions import FindPackageShare
 
 
 def generate_launch_description():
@@ -39,13 +40,13 @@ def generate_launch_description():
 
     joint_state_broadcaster_spawner = Node(
         package="controller_manager",
-        executable="spawner.py",
+        executable="spawner",
         arguments=["joint_state_broadcaster", "--controller-manager", "/controller_manager"],
     )
 
     robot_controller_spawner = Node(
         package="controller_manager",
-        executable="spawner.py",
+        executable="spawner",
         arguments=["xavbot_controller", "--controller-manager", "/controller_manager"],
     )
 

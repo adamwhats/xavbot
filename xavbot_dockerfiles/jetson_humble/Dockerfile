@@ -2,6 +2,7 @@ FROM arm64v8/ros:humble-perception-jammy
 
 RUN apt-get update \
    && apt-get -y install --no-install-recommends \
+   ros-$ROS_DISTRO-apriltag-ros \
    ros-$ROS_DISTRO-dynamixel-workbench-toolbox \
    ros-$ROS_DISTRO-gripper-controllers \
    ros-$ROS_DISTRO-hardware-interface \

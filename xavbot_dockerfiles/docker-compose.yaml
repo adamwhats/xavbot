@@ -1,0 +1,6 @@
+xavbot-pi:
+    network_mode: host
+    environment:
+      # - SETUP=/xavbot_ws/install/setup.bash
+    command: ros2 launch xavbot_bringup pi.launch.py  
+    #command: /bin/bash   # wake up and do something else

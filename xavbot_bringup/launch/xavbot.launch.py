@@ -1,3 +1,4 @@
+import os
 from typing import List
 
 from launch import LaunchDescription
@@ -14,33 +15,34 @@ from moveit_configs_utils.launches import generate_move_group_launch
 
 
 def spawn_controllers(controllers: List[str]) -> List[Node]:
-    return [Node(package="controller_manager",
-                 executable="spawner",
-                 arguments=[controller, "--controller-manager", "/controller_manager"]
+    return [Node(package='controller_manager',
+                 executable='spawner',
+                 arguments=[controller, '--controller-manager', '/controller_manager']
                  ) for controller in controllers]
-        
 
 
 def generate_launch_description():
 
+    use_nav2 = LaunchConfiguration('navigation', default=True)
+
     # Get URDF via xacro
     robot_description_content = Command([
-        PathJoinSubstitution([FindExecutable(name="xacro")]),
-        " ",
+        PathJoinSubstitution([FindExecutable(name='xacro')]),
+        ' ',
         PathJoinSubstitution(
-            [FindPackageShare("xavbot_description"), "urdf", "xavbot.urdf.xacro"]),
+            [FindPackageShare('xavbot_description'), 'urdf', 'xavbot.urdf.xacro']),
     ]
     )
     robot_description = {'robot_description': robot_description_content}
 
     robot_controllers = PathJoinSubstitution(
-        [FindPackageShare("xavbot_bringup"), "config", "xavbot_controller_config.yaml"])
+        [FindPackageShare('xavbot_bringup'), 'config', 'xavbot_controller_config.yaml'])
 
     control_node = Node(
-        package="controller_manager",
-        executable="ros2_control_node",
+        package='controller_manager',
+        executable='ros2_control_node',
         parameters=[robot_description, robot_controllers],
-        output="both",
+        output='both',
     )
 
     robot_state_pub_node = Node(
@@ -51,15 +53,15 @@ def generate_launch_description():
     )
 
     joint_state_broadcaster_spawner = Node(
-        package="controller_manager",
-        executable="spawner",
-        arguments=["joint_state_broadcaster", "--controller-manager", "/controller_manager"],
+        package='controller_manager',
+        executable='spawner',
+        arguments=['joint_state_broadcaster', '--controller-manager', '/controller_manager'],
     )
 
     xavbot_controllers = [
-        "xavbot_platform_controller",
-        "xavbot_arm_controller",
-        "xavbot_gripper_controller"
+        'xavbot_platform_controller',
+        'xavbot_arm_controller',
+        'xavbot_gripper_controller'
     ]
 
     # Delay start of xavbot controllers after `joint_state_broadcaster`
@@ -70,15 +72,25 @@ def generate_launch_description():
         )
     )
 
-    moveit_config = MoveItConfigsBuilder("xavbot", package_name="xavbot_moveit_config").to_moveit_configs()
+    moveit_config = MoveItConfigsBuilder('xavbot', package_name='xavbot_moveit_config').to_moveit_configs()
     move_group = generate_move_group_launch(moveit_config)
+
+    nav2_bringup = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(
+            launch_file_path=PathJoinSubstitution([FindPackageShare('nav2_bringup'), 'launch', 'bringup_launch.py'])), launch_arguments={
+                'params_files': PathJoinSubstitution([FindPackageShare('xavbot_bringup'), 'config', 'nav2_params.yaml']),
+                'map': 'False'
+        }.items(),
+        condition=IfCondition(use_nav2)
+    )
 
     nodes = [
         control_node,
         robot_state_pub_node,
         joint_state_broadcaster_spawner,
         xavbot_controllers_spawner,
-        move_group
+        move_group,
+        nav2_bringup
     ]
 
     return LaunchDescription(nodes)

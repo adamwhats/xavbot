@@ -1,0 +1,2 @@
+# share ssh key and known hosts to allow remote access into xavbot-pi
+-v `realpath ~/.ssh`:/home/admin/.ssh  

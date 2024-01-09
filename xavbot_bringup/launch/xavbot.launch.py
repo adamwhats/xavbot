@@ -1,80 +1,35 @@
-import os
-from typing import List
-
 from launch import LaunchDescription
-from launch.actions import IncludeLaunchDescription, RegisterEventHandler
-from launch.conditions import IfCondition
-from launch.event_handlers import OnProcessExit
-from launch.launch_description_sources import PythonLaunchDescriptionSource
-from launch.substitutions import (Command, FindExecutable, LaunchConfiguration,
-                                  PathJoinSubstitution)
 from launch_ros.actions import Node
 from launch_ros.substitutions import FindPackageShare
-from moveit_configs_utils import MoveItConfigsBuilder
-from moveit_configs_utils.launches import generate_move_group_launch
-
-
-def spawn_controllers(controllers: List[str]) -> List[Node]:
-    return [Node(package='controller_manager',
-                 executable='spawner',
-                 arguments=[controller, '--controller-manager', '/controller_manager']
-                 ) for controller in controllers]
+from launch.actions import IncludeLaunchDescription
+from launch.actions.execute_process import ExecuteProcess
+from launch.conditions import IfCondition
+from launch.launch_description_sources import PythonLaunchDescriptionSource
+from launch.substitutions import (LaunchConfiguration,
+                                  PathJoinSubstitution)
 
 
 def generate_launch_description():
 
-    use_nav2 = LaunchConfiguration('navigation', default=True)
-
-    # Get URDF via xacro
-    robot_description_content = Command([
-        PathJoinSubstitution([FindExecutable(name='xacro')]),
-        ' ',
-        PathJoinSubstitution(
-            [FindPackageShare('xavbot_description'), 'urdf', 'xavbot.urdf.xacro']),
-    ]
-    )
-    robot_description = {'robot_description': robot_description_content}
-
-    robot_controllers = PathJoinSubstitution(
-        [FindPackageShare('xavbot_bringup'), 'config', 'xavbot_controller_config.yaml'])
-
-    control_node = Node(
-        package='controller_manager',
-        executable='ros2_control_node',
-        parameters=[robot_description, robot_controllers],
-        output='both',
-    )
-
-    robot_state_pub_node = Node(
-        package='robot_state_publisher',
-        executable='robot_state_publisher',
+    # Based on afrixs's answer from https://robotics.stackexchange.com/questions/97405/remotely-launch-nodes-in-ros2
+    xavbot_pi_remote_launch = ExecuteProcess(
+        name='xavbot_pi_remote_launch',
+        cmd=['{ outer_stdout=$(readlink -f /proc/self/fd/3); } 3>&1 && screen -DmS xavbot_pi_remote_launch bash -i -c "ssh -t dev@10.42.0.54 \'bash -i -c \\"cd ~/xavbot_ws/ && docker compose -f src/xavbot/xavbot_dockerfiles/docker-compose.yaml up --force-recreate\\"\' > $outer_stdout"'],
         output='screen',
-        parameters=[robot_description],
+        shell=True,
+        emulate_tty=True,
+
+    )
+    remote_launch_terminator = Node(
+        package='xavbot_bringup',
+        executable='remote_launch_terminator.py',
+        name='remote_launch_terminator',
+        output='screen',
+        parameters=[{'screen_pid': 'xavbot_pi_remote_launch'}],
+        sigterm_timeout='30'
     )
 
-    joint_state_broadcaster_spawner = Node(
-        package='controller_manager',
-        executable='spawner',
-        arguments=['joint_state_broadcaster', '--controller-manager', '/controller_manager'],
-    )
-
-    xavbot_controllers = [
-        'xavbot_platform_controller',
-        'xavbot_arm_controller',
-        'xavbot_gripper_controller'
-    ]
-
-    # Delay start of xavbot controllers after `joint_state_broadcaster`
-    xavbot_controllers_spawner = RegisterEventHandler(
-        event_handler=OnProcessExit(
-            target_action=joint_state_broadcaster_spawner,
-            on_exit=[*spawn_controllers(xavbot_controllers)],
-        )
-    )
-
-    moveit_config = MoveItConfigsBuilder('xavbot', package_name='xavbot_moveit_config').to_moveit_configs()
-    move_group = generate_move_group_launch(moveit_config)
-
+    use_nav2 = LaunchConfiguration('navigation', default=True)
     nav2_bringup = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
             launch_file_path=PathJoinSubstitution([FindPackageShare('nav2_bringup'), 'launch', 'bringup_launch.py'])), launch_arguments={
@@ -84,13 +39,11 @@ def generate_launch_description():
         condition=IfCondition(use_nav2)
     )
 
-    nodes = [
-        control_node,
-        robot_state_pub_node,
-        joint_state_broadcaster_spawner,
-        xavbot_controllers_spawner,
-        move_group,
-        nav2_bringup
+    actions = [
+        xavbot_pi_remote_launch,
+        remote_launch_terminator
+        # remote_launch_terminator,
+        # nav2_bringup
     ]
 
-    return LaunchDescription(nodes)
+    return LaunchDescription(actions)

@@ -10,6 +10,9 @@
   <buildtool_depend>ament_cmake</buildtool_depend>
 
   <depend>apriltag_msgs</depend>
+  <depend>rclcpp_action</depend>
+  <depend>rclcpp_components</depend>
+  <depend>rclcpp</depend>
   <depend>std_msgs</depend>
   <depend>xavbot_interfaces</depend>
 

@@ -9,6 +9,7 @@ endif()
 set(THIS_PACKAGE_INCLUDE_DEPENDS
   ament_cmake
   apriltag_msgs
+  geometry_msgs
   rosidl_default_generators
 )
 
@@ -20,7 +21,8 @@ endforeach()
 rosidl_generate_interfaces(${PROJECT_NAME}
   "msg/AprilTagDetectionStamped.msg"
   "action/QueryAprilTagLog.action"
-  DEPENDENCIES apriltag_msgs
+  "action/DrivePlatform.action"
+  DEPENDENCIES ${THIS_PACKAGE_INCLUDE_DEPENDS}
 )
 
 ament_export_dependencies(rosidl_default_runtime)

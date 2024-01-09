@@ -10,6 +10,8 @@
 
 using namespace std::placeholders;
 
+namespace xavbot_perception
+{
 class AprilTagManager : public rclcpp::Node
 {
   public:
@@ -112,7 +114,8 @@ class AprilTagManager : public rclcpp::Node
       }      
     }
 }; // class AprilTagManager
+} // namespace xavbot_perception
 
 #include "rclcpp_components/register_node_macro.hpp"
-RCLCPP_COMPONENTS_REGISTER_NODE(AprilTagManager)
+RCLCPP_COMPONENTS_REGISTER_NODE(xavbot_perception::AprilTagManager)
 

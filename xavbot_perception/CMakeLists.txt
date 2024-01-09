@@ -22,14 +22,14 @@ endforeach()
 ## BUILD
 add_library(AprilTagManager SHARED src/apriltag_manager.cpp)
 ament_target_dependencies(AprilTagManager ${THIS_PACKAGE_INCLUDE_DEPENDS})
-rclcpp_components_register_node(AprilTagManager PLUGIN "AprilTagManager" EXECUTABLE "apriltag_manager")
+rclcpp_components_register_node(AprilTagManager PLUGIN "xavbot_perception::AprilTagManager" EXECUTABLE "apriltag_manager")
 
 ## INSTALL
 install(TARGETS AprilTagManager
     ARCHIVE DESTINATION lib
     LIBRARY DESTINATION lib
+    RUNTIME DESTINATION bin
 )
-
 
 install(DIRECTORY
   launch 

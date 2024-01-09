@@ -14,11 +14,11 @@
         <param name="fr_port">3</param>
         <param name="rl_port">1</param>
         <param name="rr_port">0</param>
-        <param name="fl_direction">-1</param>
-        <param name="fr_direction">1</param>
+        <param name="fl_direction">1</param>
+        <param name="fr_direction">-1</param>
         <param name="rl_direction">1</param>
         <param name="rr_direction">-1</param>
-        <param name="device">/dev/ttyACM0</param>ij
+        <param name="device">/dev/ttyACM0</param>
         <param name="timeout_ms">100</param>
       </hardware>
       <joint name="${prefix}front_left_wheel_joint">

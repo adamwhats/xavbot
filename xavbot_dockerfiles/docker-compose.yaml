@@ -1,6 +1,20 @@
-xavbot-pi:
+version: "3"
+
+services:
+  xavbot-pi:
+    build:
+      context: ~/xavbot_ws
+      dockerfile: src/xavbot/xavbot_dockerfiles/arm64_humble/Dockerfile
+    cap_add:
+      - SYS_NICE
+    volumes:
+      - ~/xavbot_ws:/xavbot_ws
+    devices:
+      - "/dev/ttyUSB0:/dev/ttyUSB0"
+      - "/dev/ttyACM0:/dev/ttyACM0"
     network_mode: host
-    environment:
-      # - SETUP=/xavbot_ws/install/setup.bash
-    command: ros2 launch xavbot_bringup pi.launch.py  
-    #command: /bin/bash   # wake up and do something else
+    working_dir: /xavbot_ws
+    entrypoint: src/xavbot/xavbot_dockerfiles/scripts/pi_entrypoint.sh
+    command: ros2 launch xavbot_bringup pi.launch.py
+    stdin_open: true # docker run -i
+    tty: true        # docker run -t

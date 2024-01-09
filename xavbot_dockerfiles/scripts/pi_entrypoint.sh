@@ -1,13 +1,14 @@
-    #!/bin/bash
-    set -e
+#!/bin/bash
+set -e
 
-    # setup ros environment
-    if [ -z "${SETUP}" ]; then
-        # basic ros environment
-        source "/opt/ros/$ROS_DISTRO/setup.bash"
-    else
-       #from environment variable; should be a absolute path to the appropriate workspaces's setup.bash
-        source $SETUP
-    fi
+# setup ros environment
+if [ -e "./install/setup.bash" ]; then
+  source  "./install/setup.bash"
+else
+  source "/opt/ros/$ROS_DISTRO/setup.bash"
+fi
 
-    exec "$@"
+colcon build
+source "./install/setup.bash"
+
+exec "$@"

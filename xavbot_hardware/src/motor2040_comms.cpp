@@ -44,7 +44,7 @@ void Motor2040Comms::send_and_receive_velocities_(std::string output)
   }
   catch (const LibSerial::ReadTimeout&)
   {
-      std::cerr << "The Read() call has timed out." << std::endl ;
+      std::cerr << "The LibSerial::Read() call has timed out - potentially caused by high current draw" << std::endl ;
   }
 
   // Parse the response

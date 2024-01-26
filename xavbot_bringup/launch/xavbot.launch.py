@@ -41,8 +41,7 @@ def generate_launch_description():
 
     actions = [
         xavbot_pi_remote_launch,
-        remote_launch_terminator
-        # remote_launch_terminator,
+        remote_launch_terminator,
         # nav2_bringup
     ]
 

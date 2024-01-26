@@ -12,3 +12,5 @@ RUN apt-get update && apt-get install -y \
     ros-$ROS_DISTRO-teleop-twist-keyboard \
     libserial-dev \
     screen
+
+ENV XAVBOT_PI_IP=10.42.0.54

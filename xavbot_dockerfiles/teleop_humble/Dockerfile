@@ -8,10 +8,13 @@ RUN apt-get update \
    ros-$ROS_DISTRO-teleop-twist-keyboard \
    ros-$ROS_DISTRO-xacro \
    # Temporary imports for xavbot_arm development
+   # ros-$ROS_DISTRO-behaviourtree-cpp \
    ros-$ROS_DISTRO-dynamixel-workbench-toolbox \
    ros-$ROS_DISTRO-gripper-controllers \
    ros-$ROS_DISTRO-hardware-interface \
    ros-$ROS_DISTRO-moveit \
+   ros-$ROS_DISTRO-navigation2 \
+   ros-$ROS_DISTRO-nav2-bringup \
    ros-$ROS_DISTRO-ros2-control \
    ros-$ROS_DISTRO-ros2-controllers \
    ros-$ROS_DISTRO-realtime-tools \
@@ -31,3 +34,6 @@ RUN pip install setuptools==58.2.0
 RUN sudo usermod -aG dialout ros
 ARG WORKSPACE
 RUN echo "if [ -f ${WORKSPACE}/install/setup.bash ]; then source ${WORKSPACE}/install/setup.bash; fi" >> /home/ros/.bashrc
+
+# Configure Fast DDS to allow discovery on the xavbot subnet
+ENV FASTRTPS_DEFAULT_PROFILES_FILE /workspaces/xavbot_local_ws/src/xavbot/FASTRTPS_PROFILE.xml

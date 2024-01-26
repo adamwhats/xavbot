@@ -5,8 +5,7 @@ from launch.actions import IncludeLaunchDescription
 from launch.actions.execute_process import ExecuteProcess
 from launch.conditions import IfCondition
 from launch.launch_description_sources import PythonLaunchDescriptionSource
-from launch.substitutions import (LaunchConfiguration,
-                                  PathJoinSubstitution)
+from launch.substitutions import LaunchConfiguration, PathJoinSubstitution
 
 
 def generate_launch_description():

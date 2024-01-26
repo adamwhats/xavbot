@@ -14,3 +14,15 @@ XavBot is a small holonomic robot based around the NVIDIA Jetson Xavier NX with 
 |[`xavbot_dockerfiles`](https://github.com/adamwhats/xavbot/tree/main/xavbot_dockerfiles)|Dockerfiles for both xavbot itself and teleop on a remote machine.|
 |[`xavbot_hardware`](https://github.com/adamwhats/xavbot/tree/main/xavbot_hardware)|Hardware interface for driving the Motor2040 board. Written with lots of guidance from the excellent series by [Articulated Robotics](https://www.youtube.com/c/ArticulatedRobotics).|
 |[`xavbot_teleop`](https://github.com/adamwhats/xavbot/tree/main/xavbot_teleop)|A launch file and rviz config for operating xavbot with a dualshock 4 controller (TODO).|
+
+## Setup Notes
+### Iptables Rules
+ TODO - Implement method of automatically applying the rules at /etc/iptables/rules.v4 on the jetson
+
+### Isaac ROS Dev Environment
+This codebase is designed to work in the [NVIDIA Isaac ROS Docker Development Environment](https://nvidia-isaac-ros.github.io/repositories_and_packages/isaac_ros_common/index.html). To set this up, the original files found at:
+  - `src/isaac_ros_common/scripts/.isaac_ros_common-config`
+  - `src/isaac_ros_common/scripts/.isaac_ros_dev-dockerargs`
+  - `src/isaac_ros_common/docker/scripts/workspace-entrypoint.sh`
+  
+  need to be replaced with their counterparts from inside the `/home/dev/workspaces/isaac_ros-dev/src/xavbot/xavbot_dockerfiles/isaac_ros` directory

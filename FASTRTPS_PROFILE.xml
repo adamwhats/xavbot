@@ -10,6 +10,40 @@
 
     <participant profile_name="udp_transport_profile" is_default_profile="true">
         <rtps>
+            <builtin>
+                <initialPeersList>
+                    <locator>
+                        <udpv4>
+                            <address>192.168.4.200</address>
+                        </udpv4>
+                    </locator>
+                    <locator>
+                        <udpv4>
+                            <address>192.168.4.101</address>
+                        </udpv4>
+                    </locator>
+                    <locator>
+                        <udpv4>
+                            <address>10.42.0.1</address>
+                        </udpv4>
+                    </locator>
+                    <locator>
+                        <udpv4>
+                            <address>10.42.0.54</address>
+                        </udpv4>
+                    </locator>
+                </initialPeersList>
+            </builtin>
+            <userTransports>
+                <transport_id>UdpTransport</transport_id>
+            </userTransports>
+            <useBuiltinTransports>true</useBuiltinTransports>
+        </rtps>
+    </participant>
+</profiles>
+
+    <!-- <participant profile_name="udp_transport_profile" is_default_profile="true">
+        <rtps>
             <userTransports>
                 <transport_id>UdpTransport</transport_id>
             </userTransports>
@@ -35,4 +69,4 @@
             </builtin>
         </rtps>
     </participant>
-</profiles>
+</profiles> -->

@@ -15,8 +15,8 @@ def generate_launch_description():
                             extra_arguments=[{'use_intra_process_comms': True}])
 
     detector = ComposableNode(name='apriltag_detector',
-                              package='apriltag_ros',
-                              plugin='AprilTagNode',
+                              package='isaac_ros_apriltag',
+                              plugin='nvidia::isaac_ros::apriltag::AprilTagNode',
                               parameters=[{
                                   'size': 0.03
                               }],

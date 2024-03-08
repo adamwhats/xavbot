@@ -24,14 +24,42 @@ from launch.substitutions import LaunchConfiguration
 
 def generate_launch_description():
     """Launch file which brings up visual slam node configured for RealSense."""
-    realsense_camera_node = Node(
+    # realsense_camera_node = Node(
+    #     name='VIO_camera',
+    #     namespace='VIO_camera',
+    #     package='realsense2_camera',
+    #     executable='realsense2_camera_node',
+    #     parameters=[{
+    #             'enable_infra1': True,
+    #             'enable_infra2': True,
+    #             'enable_color': False,
+    #             'enable_depth': False,
+    #             'depth_module.emitter_enabled': 0,
+    #             'depth_module.profile': '640x360x90',
+    #             'enable_gyro': True,
+    #             'enable_accel': True,
+    #             'gyro_fps': 200,
+    #             'accel_fps': 63,
+    #             'unite_imu_method': 2,
+    #             'serial_no': '_008222072206',
+    #             'camera_name': 'VIO_camera',
+    #             '_image_transport': 'compressed',
+    #     }]
+    # )
+
+    # NOTE: Requires realsense-ros branch >= 4.54.1 to enable static_tf and intra_process_comms
+    # This does
+    realsense_camera_node = ComposableNode(
         name='VIO_camera',
         namespace='VIO_camera',
         package='realsense2_camera',
-        executable='realsense2_camera_node',
+        plugin='realsense2_camera::RealSenseNodeFactory',
+        extra_arguments=[{'use_intra_process_comms': True}],
         parameters=[{
                 'enable_infra1': True,
                 'enable_infra2': True,
+                'infra1_qos': 'SENSOR_DATA',
+                'infra2_qos': 'SENSOR_DATA',
                 'enable_color': False,
                 'enable_depth': False,
                 'depth_module.emitter_enabled': 0,
@@ -43,14 +71,27 @@ def generate_launch_description():
                 'unite_imu_method': 2,
                 'serial_no': '_008222072206',
                 'camera_name': 'VIO_camera',
-                '_image_transport': 'compressed',
         }]
+    )
+
+    vio_camera_encoder_node = ComposableNode(
+        package='isaac_ros_h264_encoder',
+        plugin='nvidia::isaac_ros::h264_encoder::EncoderNode',
+        name='vio_camera_encoder_node',
+        parameters=[{
+            'input_width': 640,
+            'input_height': 360,
+        }],
+        remappings=[
+            ('image_raw', 'VIO_camera/infra1/image_rect_raw'),
+            ('image_compressed', 'VIO_camera/infra1/image_compressed')]
     )
 
     visual_slam_node = ComposableNode(
         name='visual_slam_node',
         package='isaac_ros_visual_slam',
         plugin='nvidia::isaac_ros::visual_slam::VisualSlamNode',
+        extra_arguments=[{"use_intra_process_comms": True}],
         parameters=[{
                     'denoise_input_images': False,
                     'rectified_images': True,
@@ -85,6 +126,8 @@ def generate_launch_description():
         package='rclcpp_components',
         executable='component_container',
         composable_node_descriptions=[
+            realsense_camera_node,
+            vio_camera_encoder_node,
             visual_slam_node
         ],
         output='screen'
@@ -99,6 +142,6 @@ def generate_launch_description():
 
     return launch.LaunchDescription([
         visual_slam_launch_container,
-        realsense_camera_node,
+        # realsense_camera_node,
         dummy_tf
     ])

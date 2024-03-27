@@ -14,12 +14,12 @@ def generate_launch_description():
     # Based on afrixs's answer from https://robotics.stackexchange.com/questions/97405/remotely-launch-nodes-in-ros2
     xavbot_pi_remote_launch = ExecuteProcess(
         name='xavbot_pi_remote_launch',
-        cmd=['{ outer_stdout=$(readlink -f /proc/self/fd/3); } 3>&1 && screen -DmS xavbot_pi_remote_launch bash -i -c "ssh -t dev@10.42.0.54 \'bash -i -c \\"cd ~/xavbot_ws/ && docker compose -f src/xavbot/xavbot_dockerfiles/docker-compose.yaml up --force-recreate\\"\' > $outer_stdout"'],
+        cmd=['{ outer_stdout=$(readlink -f /proc/self/fd/3); } 3>&1 && screen -DmS xavbot_pi_remote_launch bash -i -c "ssh -t dev@10.42.0.54 \'bash -i -c \\"cd ~/xavbot_ws/ && docker compose -f src/xavbot/xavbot_dockerfiles/docker-compose.yaml up --force-recreate --build --env REBUILD=false\\"\' > $outer_stdout"'],
         output='screen',
         shell=True,
         emulate_tty=True,
-
     )
+    
     remote_launch_terminator = Node(
         package='xavbot_bringup',
         executable='remote_launch_terminator.py',

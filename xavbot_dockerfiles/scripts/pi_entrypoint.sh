@@ -1,14 +1,17 @@
 #!/bin/bash
 set -e
 
-# setup ros environment
+# Setup ros environment
 if [ -e "./install/setup.bash" ]; then
   source  "./install/setup.bash"
 else
   source "/opt/ros/$ROS_DISTRO/setup.bash"
 fi
 
-colcon build
-source "./install/setup.bash"
+# Optionally rebuild workspace
+if [ "$REBUILD" = true ]; then
+  colcon build
+  source "./install/setup.bash"
+fi
 
 exec "$@"
